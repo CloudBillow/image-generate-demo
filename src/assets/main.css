@@ -1,0 +1,163 @@
+@import './base.css';
+
+/* Design Tokens - Dark Theme */
+:root {
+  /* Primary Colors */
+  --c-primary: #10A37F;
+  --c-primary-600: #0D8F71;
+  --c-primary-300: #19C37D;
+
+  /* Neutral Colors - Dark */
+  --c-bg: #202123;
+  --c-surface: #2A2B32;
+  --c-input: #40414F;
+  --c-text: #ECECEC;
+  --c-text-2: #9CA3AF;
+  --c-border: #2F313A;
+
+  /* Functional Colors */
+  --c-success: #16A34A;
+  --c-success-light: #22C55E;
+  --c-warning: #F59E0B;
+  --c-warning-light: #FBBF24;
+  --c-error: #EF4444;
+  --c-error-dark: #DC2626;
+  --c-info: #3B82F6;
+
+  /* Code Block Colors */
+  --c-code-bg: #1E1E1E;
+  --c-code-border: #2C2C2C;
+  --c-code-line-number: #7C7C7C;
+  --c-code-keyword: #C586C0;
+  --c-code-string: #CE9178;
+  --c-code-function: #4FC1FF;
+
+  /* Gradients */
+  --g-primary: linear-gradient(90deg, #19C37D 0%, #10A37F 100%);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+
+  /* Border Radius */
+  --radius-container: 12px;
+  --radius-button: 10px;
+  --radius-input: 10px;
+  --radius-bubble: 16px;
+
+  /* Shadows */
+  --shadow-low: 0 1px 4px rgba(0, 0, 0, 0.16);
+  --shadow-mid: 0 4px 12px rgba(0, 0, 0, 0.24);
+  --shadow-high: 0 10px 24px rgba(0, 0, 0, 0.28);
+
+  /* Motion */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --easing: cubic-bezier(0.2, 0.6, 0.2, 1);
+
+  /* Z-index */
+  --z-dropdown: 1000;
+  --z-modal: 1100;
+  --z-toast: 1200;
+  --z-tooltip: 1300;
+
+  /* Typography */
+  --font-family: Inter, 'SF Pro Text', 'PingFang SC', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  --line-height: 1.5;
+}
+
+/* Light Theme (optional) */
+@media (prefers-color-scheme: light) {
+  :root {
+    --c-bg: #F7F8FA;
+    --c-surface: #FFFFFF;
+    --c-input: #F1F2F5;
+    --c-text: #1F2937;
+    --c-text-2: #6B7280;
+    --c-border: #E5E7EB;
+  }
+}
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: var(--c-text);
+  background-color: var(--c-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Input Focus Glow */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.25);
+}
+
+/* Button Base Styles */
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all var(--motion-base) var(--easing);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Accessibility */
+*:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--c-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--c-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-text-2);
+}
