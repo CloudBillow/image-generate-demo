@@ -91,37 +91,43 @@ const handleGenerate = async ({ apiKey, payload }) => {
           console.log('Received chunk:', chunk)
 
           if (chunk.type === 'image') {
-            // Update result at current index
+            // Replace placeholder with actual image using splice for reactivity
+            const newImage = {
+              url: chunk.data.url,
+              size: chunk.data.size,
+              revised_prompt: chunk.data.revised_prompt,
+              image_index: chunk.data.image_index ?? imageIndex,
+              loading: false,
+              error: null
+            }
+
+            // Use splice to replace item and trigger reactivity
             if (imageIndex < results.value.length) {
-              results.value[imageIndex] = {
-                url: chunk.data.url,
-                size: chunk.data.size,
-                revised_prompt: chunk.data.revised_prompt,
-                loading: false,
-                error: null
-              }
-              imageIndex++
+              results.value.splice(imageIndex, 1, newImage)
             } else {
               // Add extra image if more than expected
-              results.value.push({
-                url: chunk.data.url,
-                size: chunk.data.size,
-                revised_prompt: chunk.data.revised_prompt,
-                loading: false,
-                error: null
-              })
+              results.value.push(newImage)
             }
+            imageIndex++
+
+            console.log(`Image ${imageIndex} added to results, total: ${results.value.length}`)
           } else if (chunk.type === 'error') {
-            // Mark current image as error
-            if (imageIndex < results.value.length) {
-              results.value[imageIndex] = {
-                loading: false,
-                error: chunk.error
-              }
-              imageIndex++
+            // Replace placeholder with error
+            const errorResult = {
+              loading: false,
+              error: chunk.error,
+              image_index: imageIndex
             }
+
+            if (imageIndex < results.value.length) {
+              results.value.splice(imageIndex, 1, errorResult)
+            } else {
+              results.value.push(errorResult)
+            }
+            imageIndex++
           } else if (chunk.type === 'usage') {
             usage.value = chunk.data
+            console.log('Usage info received:', chunk.data)
           }
         }
       })
@@ -130,6 +136,7 @@ const handleGenerate = async ({ apiKey, payload }) => {
       results.value = results.value.filter(r => !r.loading)
 
       status.value = 'completed'
+      console.log('Streaming completed, total images:', results.value.length)
     } else {
       // Non-streaming mode
       status.value = 'requesting'

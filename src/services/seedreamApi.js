@@ -70,6 +70,7 @@ async function handleStreamingResponse(response, onChunk) {
   let buffer = ''
   let allImages = []
   let usage = null
+  let currentEvent = ''
 
   try {
     while (true) {
@@ -94,32 +95,66 @@ async function handleStreamingResponse(response, onChunk) {
           continue
         }
 
+        // Parse event type
+        if (trimmedLine.startsWith('event: ')) {
+          currentEvent = trimmedLine.slice(7).trim()
+          continue
+        }
+
         // Parse data events
         if (trimmedLine.startsWith('data: ')) {
           const dataStr = trimmedLine.slice(6).trim()
 
           // Check for [DONE] marker
           if (dataStr === '[DONE]') {
+            console.log('Stream completed with [DONE] marker')
             continue
           }
 
           try {
             const eventData = JSON.parse(dataStr)
+            console.log('Parsed SSE event:', currentEvent, eventData)
 
-            // Handle error in stream
-            if (eventData.error) {
+            // Handle different event types
+            if (currentEvent === 'image_generation.partial_succeeded' || eventData.type === 'image_generation.partial_succeeded') {
+              // Handle partial success - single image generated
+              const image = {
+                url: eventData.url,
+                size: eventData.size || null,
+                revised_prompt: eventData.revised_prompt || null,
+                image_index: eventData.image_index
+              }
+
+              allImages.push(image)
+
+              if (onChunk) {
+                onChunk({
+                  type: 'image',
+                  data: image
+                })
+              }
+            } else if (currentEvent === 'image_generation.completed' || eventData.type === 'image_generation.completed') {
+              // Handle completion event with usage info
+              if (eventData.usage) {
+                usage = eventData.usage
+                if (onChunk) {
+                  onChunk({
+                    type: 'usage',
+                    data: eventData.usage
+                  })
+                }
+              }
+            } else if (eventData.error || currentEvent === 'error') {
+              // Handle error in stream
               if (onChunk) {
                 onChunk({
                   type: 'error',
-                  error: eventData.error.message || 'Unknown error',
-                  code: eventData.error.code
+                  error: eventData.error?.message || eventData.message || 'Unknown error',
+                  code: eventData.error?.code || eventData.code
                 })
               }
-              continue
-            }
-
-            // Handle successful image data
-            if (eventData.data && Array.isArray(eventData.data)) {
+            } else if (eventData.data && Array.isArray(eventData.data)) {
+              // Legacy format support - batch data
               const images = eventData.data.map(item => ({
                 url: item.url,
                 size: item.size || null,
@@ -137,23 +172,14 @@ async function handleStreamingResponse(response, onChunk) {
                 })
               }
             }
-
-            // Handle usage info
-            if (eventData.usage) {
-              usage = eventData.usage
-              if (onChunk) {
-                onChunk({
-                  type: 'usage',
-                  data: eventData.usage
-                })
-              }
-            }
           } catch (parseError) {
             console.error('Failed to parse event data:', parseError, dataStr)
           }
         }
       }
     }
+
+    console.log('Stream finished, total images:', allImages.length)
 
     return {
       success: true,
