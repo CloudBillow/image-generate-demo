@@ -214,9 +214,16 @@ const handleSubmit = () => {
   }
 
   // Build request payload
+  let finalPrompt = formData.value.prompt
+
+  // For multi-image modes, prepend image count to prompt to ensure correct generation
+  if (props.mode === 'text-to-images' || props.mode === 'images-to-images') {
+    finalPrompt = `${formData.value.maxImages}张。${formData.value.prompt}`
+  }
+
   const payload = {
     model: 'doubao-seedream-4-0-250828',
-    prompt: formData.value.prompt,
+    prompt: finalPrompt,
     size: formData.value.size,
     watermark: formData.value.watermark,
     response_format: 'url'

@@ -1,12 +1,5 @@
 <template>
   <div class="image-generation">
-    <header class="page-header">
-      <h1 class="page-title">Seedream 4.0 图像生成</h1>
-      <p class="page-description">
-        支持文生图、组图生成、图生图及多参考图生图等多种模式
-      </p>
-    </header>
-
     <div class="page-content">
       <aside class="sidebar">
         <div class="control-section">
@@ -195,25 +188,6 @@ const handleCancel = () => {
 .image-generation {
   min-height: 100vh;
   background-color: var(--c-bg);
-}
-
-.page-header {
-  padding: var(--space-3xl) var(--space-2xl);
-  background-color: var(--c-surface);
-  border-bottom: 1px solid var(--c-border);
-}
-
-.page-title {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  color: var(--c-text);
-  margin-bottom: var(--space-sm);
-}
-
-.page-description {
-  font-size: var(--font-size-base);
-  color: var(--c-text-2);
-  line-height: var(--line-height);
 }
 
 .page-content {
