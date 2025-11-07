@@ -65,15 +65,15 @@
     </div>
 
     <div class="form-row">
-      <div class="form-group checkbox-group">
-        <label class="checkbox-label">
-          <input
-            v-model="formData.watermark"
-            type="checkbox"
-            class="form-checkbox"
-          />
-          <span>添加水印</span>
-        </label>
+      <div class="form-group">
+        <label for="watermarkText" class="form-label">水印文字</label>
+        <input
+          id="watermarkText"
+          v-model="formData.watermarkText"
+          type="text"
+          class="form-input"
+          placeholder="输入水印文字（留空则不添加水印）"
+        />
       </div>
 
       <div v-if="supportsMultipleImages" class="form-group checkbox-group">
@@ -133,18 +133,29 @@ const formData = ref({
   prompt: '',
   images: [],
   size: '4096x4096',
-  watermark: false,
+  watermarkText: '',
   maxImages: 3,
   stream: true
 })
 
 const validationError = ref('')
 
-// Load API Key from localStorage
+// Load API Key from localStorage or URL parameter
 onMounted(() => {
-  const savedApiKey = localStorage.getItem('ark_api_key')
-  if (savedApiKey) {
-    formData.value.apiKey = savedApiKey
+  // Check if there's a key parameter in the URL
+  const urlParams = new URLSearchParams(window.location.search)
+  const keyFromUrl = urlParams.get('key')
+
+  if (keyFromUrl) {
+    // If key is in URL, use it and save to localStorage
+    formData.value.apiKey = keyFromUrl
+    localStorage.setItem('ark_api_key', keyFromUrl)
+  } else {
+    // Otherwise, try to load from localStorage
+    const savedApiKey = localStorage.getItem('ark_api_key')
+    if (savedApiKey) {
+      formData.value.apiKey = savedApiKey
+    }
   }
 })
 
@@ -221,15 +232,15 @@ const handleSubmit = () => {
 
   // For multi-image modes, append image count to prompt
   if (props.mode === 'text-to-images' || props.mode === 'images-to-images') {
-    finalPrompt = `${formData.value.prompt}（生成${formData.value.maxImages}张）在图片右下角添加水印”机器人”字号12像素字体颜色#ddd`
+    finalPrompt = `${formData.value.prompt}（生成${formData.value.maxImages}张）`
   }
 
   const payload = {
     model: 'doubao-seedream-4-0-250828',
     prompt: finalPrompt,
     size: formData.value.size,
-    watermark: formData.value.watermark,
-    response_format: 'url'
+    watermark: false,
+    response_format: 'b64_json'
   }
 
   // Mode-specific configurations
@@ -265,7 +276,8 @@ const handleSubmit = () => {
 
   emit('submit', {
     apiKey: formData.value.apiKey,
-    payload
+    payload,
+    watermarkText: formData.value.watermarkText
   })
 }
 </script>

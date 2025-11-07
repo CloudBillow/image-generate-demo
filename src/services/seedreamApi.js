@@ -120,6 +120,7 @@ async function handleStreamingResponse(response, onChunk) {
               // Handle partial success - single image generated
               const image = {
                 url: eventData.url,
+                b64_json: eventData.b64_json,
                 size: eventData.size || null,
                 revised_prompt: eventData.revised_prompt || null,
                 image_index: eventData.image_index
@@ -157,6 +158,7 @@ async function handleStreamingResponse(response, onChunk) {
               // Legacy format support - batch data
               const images = eventData.data.map(item => ({
                 url: item.url,
+                b64_json: item.b64_json,
                 size: item.size || null,
                 revised_prompt: item.revised_prompt || null
               }))

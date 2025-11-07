@@ -49,29 +49,18 @@
           />
           <div class="result-overlay">
             <div class="result-actions">
-              <button
-                class="action-button"
-                @click="copyUrl(result.url)"
-                title="复制链接"
-              >
-                📋
-              </button>
-              <button
-                class="action-button"
+              <el-button
+                :icon="View"
+                circle
+                @click="openPreview(result.url)"
+                title="预览图片"
+              />
+              <el-button
+                :icon="Download"
+                circle
                 @click="downloadImage(result.url, index)"
                 title="下载图片"
-              >
-                💾
-              </button>
-              <a
-                :href="result.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="action-button"
-                title="新窗口打开"
-              >
-                🔗
-              </a>
+              />
             </div>
             <div v-if="result.size" class="result-info">
               {{ result.size }}
@@ -89,11 +78,22 @@
         <span v-if="usage.total_tokens">总计: {{ usage.total_tokens }}</span>
       </div>
     </div>
+
+    <!-- Image Preview Dialog -->
+    <el-image-viewer
+      v-if="previewVisible"
+      :url-list="[previewImageUrl]"
+      :initial-index="0"
+      :hide-on-click-modal="true"
+      @close="closePreview"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
+import { Download, View } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   results: {
@@ -115,8 +115,16 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false
+  },
+  watermarkText: {
+    type: String,
+    default: ''
   }
 })
+
+// Image preview
+const previewImageUrl = ref('')
+const previewVisible = ref(false)
 
 const statusText = computed(() => {
   const statusMap = {
@@ -129,6 +137,33 @@ const statusText = computed(() => {
   return statusMap[props.status] || ''
 })
 
+const openPreview = async (url) => {
+  try {
+    console.log('Opening preview with watermark:', props.watermarkText)
+    // Add watermark to preview if watermarkText is provided
+    if (props.watermarkText) {
+      // ElMessage.info('正在添加水印...')
+      const watermarkedUrl = await addWatermarkToImage(url, props.watermarkText)
+      previewImageUrl.value = watermarkedUrl
+    } else {
+      previewImageUrl.value = url
+    }
+    previewVisible.value = true
+  } catch (err) {
+    console.error('Failed to prepare preview:', err)
+    ElMessage.warning('水印添加失败，显示原图')
+    // Fallback to original image
+    previewImageUrl.value = url
+    previewVisible.value = true
+  }
+}
+
+const closePreview = () => {
+  // No need to clean up data URLs
+  previewVisible.value = false
+  previewImageUrl.value = ''
+}
+
 const handleImageLoad = (index) => {
   console.log(`Image ${index + 1} loaded successfully`)
 }
@@ -137,31 +172,106 @@ const handleImageError = (index) => {
   console.error(`Image ${index + 1} failed to load`)
 }
 
-const copyUrl = async (url) => {
-  try {
-    await navigator.clipboard.writeText(url)
-    alert('链接已复制到剪贴板')
-  } catch (err) {
-    console.error('Failed to copy URL:', err)
-    alert('复制失败，请手动复制')
-  }
+/**
+ * Add watermark to image using canvas
+ */
+const addWatermarkToImage = (imageUrl, watermarkText) => {
+  return new Promise((resolve, reject) => {
+    if (!watermarkText) {
+      // No watermark text, return original image
+      resolve(imageUrl)
+      return
+    }
+
+    console.log('Adding watermark:', watermarkText, 'to image:', imageUrl)
+
+    const img = new Image()
+
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+
+        canvas.width = img.width
+        canvas.height = img.height
+
+        // Draw original image
+        ctx.drawImage(img, 0, 0)
+
+        // Configure watermark style - dynamic font size based on image width
+        const fontSize = Math.max(48, Math.floor(img.width / 30))
+        ctx.font = `${fontSize}px Arial`
+        ctx.fillStyle = 'rgba(220, 220, 220, 0.8)'  // Light gray with 50% opacity
+        ctx.textAlign = 'right'
+        ctx.textBaseline = 'bottom'
+
+        // Add watermark to bottom-right corner
+        const padding = Math.max(20, Math.floor(img.width / 100))
+        ctx.fillText(watermarkText, img.width - padding, img.height - padding)
+
+        console.log('Watermark added successfully')
+
+        // Convert canvas to data URL
+        const watermarkedDataUrl = canvas.toDataURL('image/png')
+        resolve(watermarkedDataUrl)
+      } catch (err) {
+        console.error('Canvas error:', err)
+        reject(err)
+      }
+    }
+
+    img.onerror = () => {
+      console.error('Failed to load image')
+      reject(new Error('Failed to load image'))
+    }
+
+    // For base64 data URLs, directly use them; otherwise fetch
+    if (imageUrl.startsWith('data:')) {
+      img.src = imageUrl
+    } else {
+      // For regular URLs, fetch and convert to data URL to avoid CORS
+      fetch(imageUrl)
+        .then(response => response.blob())
+        .then(blob => {
+          const reader = new FileReader()
+          reader.onloadend = () => {
+            img.src = reader.result
+          }
+          reader.onerror = () => {
+            reject(new Error('Failed to read blob'))
+          }
+          reader.readAsDataURL(blob)
+        })
+        .catch(err => {
+          console.error('Fetch error:', err)
+          reject(err)
+        })
+    }
+  })
 }
 
 const downloadImage = async (url, index) => {
   try {
-    const response = await fetch(url)
-    const blob = await response.blob()
-    const downloadUrl = window.URL.createObjectURL(blob)
+    // ElMessage.info('正在处理图片...')
+
+    // Add watermark if watermarkText is provided
+    let finalUrl = url
+    if (props.watermarkText) {
+      finalUrl = await addWatermarkToImage(url, props.watermarkText)
+    }
+
+    // Download the image using data URL
     const link = document.createElement('a')
-    link.href = downloadUrl
+    link.href = finalUrl
     link.download = `generated-image-${index + 1}-${Date.now()}.png`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-    window.URL.revokeObjectURL(downloadUrl)
+
+    ElMessage.success('图片下载成功')
   } catch (err) {
     console.error('Failed to download image:', err)
-    alert('下载失败，请尝试右键保存图片')
+    ElMessage.error('下载失败，请尝试右键保存图片')
   }
 }
 </script>
@@ -366,22 +476,12 @@ const downloadImage = async (url, index) => {
   justify-content: flex-end;
 }
 
-.action-button {
-  width: 36px;
-  height: 36px;
-  border: none;
+.result-actions :deep(.el-button) {
   background-color: rgba(255, 255, 255, 0.9);
-  border-radius: var(--radius-button);
-  font-size: var(--font-size-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all var(--motion-fast) var(--easing);
-  text-decoration: none;
+  border: none;
 }
 
-.action-button:hover {
+.result-actions :deep(.el-button:hover) {
   background-color: white;
   transform: scale(1.1);
 }

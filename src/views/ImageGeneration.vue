@@ -25,6 +25,7 @@
           :error="errorMessage"
           :usage="usage"
           :is-loading="isGenerating"
+          :watermark-text="watermarkText"
         />
       </main>
     </div>
@@ -46,17 +47,19 @@ const errorMessage = ref('')
 const results = ref([])
 const usage = ref(null)
 const abortController = ref(null)
+const watermarkText = ref('')
 
 /**
  * Handle image generation request
  */
-const handleGenerate = async ({ apiKey, payload }) => {
+const handleGenerate = async ({ apiKey, payload, watermarkText: wmText }) => {
   // Reset state
   isGenerating.value = true
   status.value = 'preparing'
   errorMessage.value = ''
   results.value = []
   usage.value = null
+  watermarkText.value = wmText || ''
 
   // Create abort controller for cancellation
   abortController.value = new AbortController()
@@ -85,8 +88,14 @@ const handleGenerate = async ({ apiKey, payload }) => {
 
           if (chunk.type === 'image') {
             // Replace placeholder with actual image using splice for reactivity
+            // Convert base64 to data URL if b64_json is provided
+            const imageUrl = chunk.data.b64_json
+              ? `data:image/jpeg;base64,${chunk.data.b64_json}`
+              : chunk.data.url
+
             const newImage = {
-              url: chunk.data.url,
+              url: imageUrl,
+              b64_json: chunk.data.b64_json,
               size: chunk.data.size,
               revised_prompt: chunk.data.revised_prompt,
               image_index: chunk.data.image_index ?? imageIndex,
@@ -143,13 +152,21 @@ const handleGenerate = async ({ apiKey, payload }) => {
       console.log('Received response:', response)
 
       if (response.success) {
-        results.value = response.data.map(item => ({
-          url: item.url,
-          size: item.size,
-          revised_prompt: item.revised_prompt,
-          loading: false,
-          error: null
-        }))
+        results.value = response.data.map(item => {
+          // Convert base64 to data URL if b64_json is provided
+          const imageUrl = item.b64_json
+            ? `data:image/jpeg;base64,${item.b64_json}`
+            : item.url
+
+          return {
+            url: imageUrl,
+            b64_json: item.b64_json,
+            size: item.size,
+            revised_prompt: item.revised_prompt,
+            loading: false,
+            error: null
+          }
+        })
 
         usage.value = response.usage
         status.value = 'completed'
