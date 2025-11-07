@@ -23,10 +23,11 @@ defineProps({
 defineEmits(['update:modelValue'])
 
 const modes = [
-  { value: 'text-to-image', label: '文生单图' },
+  { value: 'text-to-image', label: '文生图' },
   { value: 'text-to-images', label: '文生组图' },
   { value: 'image-to-image', label: '图生图' },
-  { value: 'images-to-images', label: '多参考图生图' }
+  { value: 'multi-image-fusion', label: '多图生图' },
+  { value: 'images-to-images', label: '多图生组图' }
 ]
 </script>
 
@@ -55,12 +56,6 @@ const modes = [
 .mode-button:hover {
   background-color: var(--c-input);
   color: var(--c-text);
-}
-
-.mode-button.active {
-  background: var(--g-primary);
-  color: white;
-  box-shadow: var(--shadow-low);
 }
 
 .mode-button:focus-visible {

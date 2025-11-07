@@ -64,7 +64,7 @@ const props = defineProps({
   },
   max: {
     type: Number,
-    default: 4
+    default: 10
   },
   label: {
     type: String,
