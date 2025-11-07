@@ -43,11 +43,14 @@
       <div class="form-group">
         <label for="size" class="form-label">图片尺寸</label>
         <select id="size" v-model="formData.size" class="form-select">
-          <option value="512x512">512×512</option>
-          <option value="1024x1024">1024×1024</option>
-          <option value="1536x1536">1536×1536</option>
-          <option value="2K">2K</option>
-          <option value="4K">4K</option>
+          <option value="4096x4096">1:1</option>
+          <option value="4096x3072">4:3</option>
+          <option value="3072x4096">3:4</option>
+          <option value="4096x2304">16:9</option>
+          <option value="2304x4096">9:16</option>
+          <option value="4096x2730">3:2</option>
+          <option value="2730x4096">2:3</option>
+          <option value="4096x1755">21:9</option>
         </select>
       </div>
 
@@ -129,8 +132,8 @@ const formData = ref({
   apiKey: '',
   prompt: '',
   images: [],
-  size: '2K',
-  watermark: true,
+  size: '4096x4096',
+  watermark: false,
   maxImages: 3,
   stream: true
 })
@@ -216,9 +219,9 @@ const handleSubmit = () => {
   // Build request payload
   let finalPrompt = formData.value.prompt
 
-  // For multi-image modes, prepend image count to prompt to ensure correct generation
+  // For multi-image modes, append image count to prompt
   if (props.mode === 'text-to-images' || props.mode === 'images-to-images') {
-    finalPrompt = `${formData.value.maxImages}张。${formData.value.prompt}`
+    finalPrompt = `${formData.value.prompt}（生成${formData.value.maxImages}张）在图片右下角添加水印”机器人”字号12像素字体颜色#ddd`
   }
 
   const payload = {
