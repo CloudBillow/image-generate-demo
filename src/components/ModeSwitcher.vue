@@ -58,6 +58,12 @@ const modes = [
   color: var(--c-text);
 }
 
+.mode-button.active {
+  background: var(--g-primary);
+  color: white;
+  box-shadow: var(--shadow-low);
+}
+
 .mode-button:focus-visible {
   outline: 2px solid var(--c-primary);
   outline-offset: 2px;
