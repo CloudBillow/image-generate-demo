@@ -201,7 +201,7 @@ const addWatermarkToImage = (imageUrl, watermarkText) => {
         // Configure watermark style - dynamic font size based on image width
         const fontSize = Math.max(48, Math.floor(img.width / 30))
         ctx.font = `${fontSize}px Arial`
-        ctx.fillStyle = 'rgba(220, 220, 220, 0.8)'  // Light gray with 50% opacity
+        ctx.fillStyle = 'rgba(220, 220, 220, 0.5)'  // Light gray with 50% opacity
         ctx.textAlign = 'right'
         ctx.textBaseline = 'bottom'
 
