@@ -70,13 +70,8 @@
       </div>
     </div>
 
-    <div v-if="usage" class="usage-info">
-      <div class="usage-title">资源消耗</div>
-      <div class="usage-details">
-        <span v-if="usage.prompt_tokens">提示词 Token: {{ usage.prompt_tokens }}</span>
-        <span v-if="usage.completion_tokens">完成 Token: {{ usage.completion_tokens }}</span>
-        <span v-if="usage.total_tokens">总计: {{ usage.total_tokens }}</span>
-      </div>
+    <div v-if="generationTime > 0 && results.length > 0" class="generation-time">
+      总耗时: {{ generationTime }}秒
     </div>
 
     <!-- Image Preview Dialog -->
@@ -119,6 +114,10 @@ const props = defineProps({
   watermarkText: {
     type: String,
     default: ''
+  },
+  generationTime: {
+    type: [Number, String],
+    default: 0
   }
 })
 
@@ -201,7 +200,7 @@ const addWatermarkToImage = (imageUrl, watermarkText) => {
         // Configure watermark style - dynamic font size based on image width
         const fontSize = Math.max(48, Math.floor(img.width / 30))
         ctx.font = `${fontSize}px Arial`
-        ctx.fillStyle = 'rgba(220, 220, 220, 0.5)'  // Light gray with 50% opacity
+        ctx.fillStyle = 'rgba(255,255,255,0.7)'  // Light gray with 50% opacity
         ctx.textAlign = 'right'
         ctx.textBaseline = 'bottom'
 
@@ -514,5 +513,15 @@ const downloadImage = async (url, index) => {
   gap: var(--space-xl);
   font-size: var(--font-size-sm);
   color: var(--c-text-2);
+}
+
+.generation-time {
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--c-surface);
+  border-radius: var(--radius-container);
+  border: 1px solid var(--c-border);
+  font-size: var(--font-size-sm);
+  color: var(--c-text-2);
+  text-align: center;
 }
 </style>

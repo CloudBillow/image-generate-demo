@@ -26,6 +26,7 @@
           :usage="usage"
           :is-loading="isGenerating"
           :watermark-text="watermarkText"
+          :generation-time="generationTime"
         />
       </main>
     </div>
@@ -48,6 +49,7 @@ const results = ref([])
 const usage = ref(null)
 const abortController = ref(null)
 const watermarkText = ref('')
+const generationTime = ref(0)
 
 /**
  * Handle image generation request
@@ -60,6 +62,10 @@ const handleGenerate = async ({ apiKey, payload, watermarkText: wmText }) => {
   results.value = []
   usage.value = null
   watermarkText.value = wmText || ''
+  generationTime.value = 0
+
+  // Start timing
+  const startTime = Date.now()
 
   // Create abort controller for cancellation
   abortController.value = new AbortController()
@@ -182,6 +188,10 @@ const handleGenerate = async ({ apiKey, payload, watermarkText: wmText }) => {
     // Clear loading placeholders on error
     results.value = results.value.filter(r => !r.loading)
   } finally {
+    // Calculate generation time
+    const endTime = Date.now()
+    generationTime.value = ((endTime - startTime) / 1000).toFixed(2)
+
     isGenerating.value = false
     abortController.value = null
   }
