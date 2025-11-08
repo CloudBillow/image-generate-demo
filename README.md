@@ -114,7 +114,6 @@ image-generate-demo/
 │   │   └── ImageGeneration.vue   # 主页面
 │   ├── App.vue
 │   └── main.js
-├── proxy-server.js               # CORS 代理服务器
 ├── package.json
 └── README.md
 ```

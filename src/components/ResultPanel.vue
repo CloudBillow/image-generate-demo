@@ -129,8 +129,8 @@ const previewVisible = ref(false)
 const statusText = computed(() => {
   const statusMap = {
     preparing: '准备中',
-    requesting: '请求中',
-    streaming: '流式接收中',
+    requesting: '生成中',
+    streaming: '生成中',
     completed: '完成',
     failed: '失败'
   }

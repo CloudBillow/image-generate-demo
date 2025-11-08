@@ -3,8 +3,8 @@
  * Handles image generation requests with streaming support
  */
 
-// Use local proxy to avoid CORS issues
-const API_ENDPOINT = 'http://localhost:3001/api/images/generations'
+// Use Vite proxy in development, relative path in production
+const API_ENDPOINT = '/api/images/generations'
 
 /**
  * Generate images using Seedream 4.0

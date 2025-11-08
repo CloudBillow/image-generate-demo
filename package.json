@@ -8,8 +8,6 @@
   },
   "scripts": {
     "dev": "vite",
-    "proxy": "node proxy-server.js",
-    "dev:all": "npm run proxy & npm run dev",
     "build": "vite build",
     "preview": "vite preview"
   },

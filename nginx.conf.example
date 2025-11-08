@@ -1,0 +1,55 @@
+server {
+    listen 80;
+    server_name your-domain.com;  # 修改为您的域名或IP
+
+    # 静态文件目录
+    root /path/to/your/project/dist;  # 修改为实际的 dist 目录路径
+    index index.html;
+
+    # Gzip 压缩
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+    # 前端路由支持 (SPA)
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # API 代理到火山引擎
+    location /api/ {
+        # 重写路径：/api/images/generations -> /api/v3/images/generations
+        rewrite ^/api/(.*)$ /api/v3/$1 break;
+
+        proxy_pass https://ark.cn-beijing.volces.com;
+        proxy_http_version 1.1;
+
+        # 传递请求头
+        proxy_set_header Host ark.cn-beijing.volces.com;
+        proxy_set_header Connection "";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # 支持 SSE 流式响应
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 75s;
+
+        # CORS 头（如果需要）
+        add_header Access-Control-Allow-Origin * always;
+        add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS' always;
+        add_header Access-Control-Allow-Headers 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization' always;
+
+        # 处理 OPTIONS 请求
+        if ($request_method = 'OPTIONS') {
+            return 204;
+        }
+    }
+
+    # 静态资源缓存
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
