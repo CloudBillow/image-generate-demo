@@ -33,7 +33,7 @@
     <div v-if="needsReferenceImage" class="form-group">
       <ImageUpload
         v-model="formData.images"
-        :multiple="mode === 'images-to-images' || mode === 'multi-image-fusion'"
+        :multiple="true"
         :max="getReferenceImageMax()"
         :label="getReferenceImageLabel()"
       />
@@ -168,7 +168,7 @@ const saveApiKey = () => {
 
 // Computed properties
 const needsReferenceImage = computed(() => {
-  return props.mode === 'image-to-image' || props.mode === 'images-to-images' || props.mode === 'multi-image-fusion'
+  return props.mode === 'image-to-image' || props.mode === 'images-to-images'
 })
 
 const supportsMultipleImages = computed(() => {
@@ -177,14 +177,13 @@ const supportsMultipleImages = computed(() => {
 
 // Helper methods for reference image configuration
 const getReferenceImageMax = () => {
-  if (props.mode === 'multi-image-fusion') return 10
-  if (props.mode === 'images-to-images') return 4
+  if (props.mode === 'image-to-image' || props.mode === 'images-to-images') return 5
   return 1
 }
 
 const getReferenceImageLabel = () => {
-  if (props.mode === 'multi-image-fusion') return '参考图 (2-10张)'
-  if (props.mode === 'images-to-images') return '参考图 (2-4张)'
+  if (props.mode === 'image-to-image') return '参考图 (1-5张)'
+  if (props.mode === 'images-to-images') return '参考图 (1-5张)'
   return '参考图'
 }
 
@@ -193,17 +192,8 @@ const isValid = computed(() => {
     return false
   }
 
-  if (props.mode === 'image-to-image' && formData.value.images.length !== 1) {
-    return false
-  }
-
-  if (props.mode === 'images-to-images' && (formData.value.images.length < 2 || formData.value.images.length > 4)) {
-    return false
-  }
-
-  return !(props.mode === 'multi-image-fusion' && (formData.value.images.length < 2 || formData.value.images.length > 10));
-
-
+  return !((props.mode === 'image-to-image' || props.mode === 'images-to-images') &&
+      (formData.value.images.length < 1 || formData.value.images.length > 5));
 })
 
 // Watch mode changes and reset relevant fields
@@ -226,29 +216,13 @@ const handleSubmit = () => {
     return
   }
 
-  if (props.mode === 'image-to-image' && formData.value.images.length !== 1) {
-    validationError.value = '请上传 1 张参考图'
-    return
-  }
-
-  if (props.mode === 'images-to-images') {
-    if (formData.value.images.length < 2) {
-      validationError.value = '请至少上传 2 张参考图'
+  if (props.mode === 'image-to-image' || props.mode === 'images-to-images') {
+    if (formData.value.images.length < 1) {
+      validationError.value = '请至少上传 1 张参考图'
       return
     }
-    if (formData.value.images.length > 4) {
-      validationError.value = '最多上传 4 张参考图'
-      return
-    }
-  }
-
-  if (props.mode === 'multi-image-fusion') {
-    if (formData.value.images.length < 2) {
-      validationError.value = '请至少上传 2 张参考图'
-      return
-    }
-    if (formData.value.images.length > 10) {
-      validationError.value = '最多上传 10 张参考图'
+    if (formData.value.images.length > 5) {
+      validationError.value = '最多上传 5 张参考图'
       return
     }
   }
@@ -285,19 +259,15 @@ const handleSubmit = () => {
       break
 
     case 'image-to-image':
-      payload.image = formData.value.images[0]
-      payload.sequential_image_generation = 'disabled'
-      payload.stream = false
-      break
-
-    case 'multi-image-fusion':
-      payload.image = formData.value.images
+      // 支持1-5张参考图
+      payload.image = formData.value.images.length === 1 ? formData.value.images[0] : formData.value.images
       payload.sequential_image_generation = 'disabled'
       payload.stream = false
       break
 
     case 'images-to-images':
-      payload.image = formData.value.images
+      // 支持1-5张参考图
+      payload.image = formData.value.images.length === 1 ? formData.value.images[0] : formData.value.images
       payload.sequential_image_generation = 'auto'
       payload.sequential_image_generation_options = {
         max_images: formData.value.maxImages
