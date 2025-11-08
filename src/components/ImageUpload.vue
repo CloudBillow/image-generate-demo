@@ -1,7 +1,10 @@
 <template>
   <div class="image-upload">
     <div class="upload-header">
-      <label class="upload-label">{{ label }}</label>
+      <label class="upload-label">
+        {{ label }}
+        <span v-if="required" class="required">*</span>
+      </label>
       <span v-if="multiple" class="upload-count">{{ images.length }}/{{ max }}</span>
     </div>
 
@@ -69,6 +72,10 @@ const props = defineProps({
   label: {
     type: String,
     default: '参考图'
+  },
+  required: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -158,6 +165,10 @@ const removeImage = (index) => {
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--c-text);
+}
+
+.required {
+  color: var(--c-error);
 }
 
 .upload-count {

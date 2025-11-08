@@ -1,7 +1,7 @@
 <template>
   <div class="parameter-form">
     <div class="form-group">
-      <label for="apiKey" class="form-label">
+      <label for="apiKey" class="form-label form-label-with-link">
         <span>
           API Key
           <span class="required">*</span>
@@ -39,6 +39,7 @@
         :multiple="true"
         :max="getReferenceImageMax()"
         :label="getReferenceImageLabel()"
+        :required="true"
       />
     </div>
 
@@ -310,6 +311,9 @@ const handleSubmit = () => {
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--c-text);
+}
+
+.form-label-with-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
