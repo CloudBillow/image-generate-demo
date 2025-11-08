@@ -2,8 +2,11 @@
   <div class="parameter-form">
     <div class="form-group">
       <label for="apiKey" class="form-label">
-        API Key
-        <span class="required">*</span>
+        <span>
+          API Key
+          <span class="required">*</span>
+        </span>
+        <a href="https://www.volcengine.com/docs/82379/1541594" target="_blank" class="help-link">如何获取?</a>
       </label>
       <input
         id="apiKey"
@@ -307,6 +310,23 @@ const handleSubmit = () => {
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--c-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.help-link {
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  color: var(--c-primary);
+  text-decoration: none;
+  transition: all var(--motion-base) var(--easing);
+}
+
+.help-link:hover {
+  color: var(--c-primary);
+  text-decoration: underline;
 }
 
 .required {
