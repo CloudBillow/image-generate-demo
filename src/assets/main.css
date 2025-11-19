@@ -1,28 +1,28 @@
 @import './base.css';
 
-/* Design Tokens - Dark Theme */
+/* Design Tokens - New Dark Theme */
 :root {
   /* Primary Colors */
-  --c-primary: #10A37F;
-  --c-primary-600: #0D8F71;
-  --c-primary-300: #19C37D;
+  --c-primary: #7E57C2;
+  --c-primary-600: #673AB7;
+  --c-primary-300: #9575CD;
 
   /* Neutral Colors - Dark */
-  --c-bg: #202123;
-  --c-surface: #2A2B32;
-  --c-input: #40414F;
-  --c-text: #ECECEC;
-  --c-text-2: #9CA3AF;
-  --c-border: #2F313A;
+  --c-bg: #1A1B26;
+  --c-surface: #2A2C3A;
+  --c-input: #3E4057;
+  --c-text: #E0E0E0;
+  --c-text-2: #A0A8C2;
+  --c-border: #343644;
 
   /* Functional Colors */
-  --c-success: #16A34A;
-  --c-success-light: #22C55E;
-  --c-warning: #F59E0B;
-  --c-warning-light: #FBBF24;
-  --c-error: #EF4444;
-  --c-error-dark: #DC2626;
-  --c-info: #3B82F6;
+  --c-success: #4CAF50;
+  --c-success-light: #81C784;
+  --c-warning: #FF9800;
+  --c-warning-light: #FFB74D;
+  --c-error: #F44336;
+  --c-error-dark: #E53935;
+  --c-info: #2196F3;
 
   /* Code Block Colors */
   --c-code-bg: #1E1E1E;
@@ -33,7 +33,7 @@
   --c-code-function: #4FC1FF;
 
   /* Gradients */
-  --g-primary: linear-gradient(90deg, #19C37D 0%, #10A37F 100%);
+  --g-primary: linear-gradient(90deg, #9575CD 0%, #7E57C2 100%);
 
   /* Spacing */
   --space-xs: 4px;
@@ -83,12 +83,12 @@
 /* Light Theme (optional) */
 @media (prefers-color-scheme: light) {
   :root {
-    --c-bg: #F7F8FA;
+    --c-bg: #F7F8FC;
     --c-surface: #FFFFFF;
-    --c-input: #F1F2F5;
-    --c-text: #1F2937;
-    --c-text-2: #6B7280;
-    --c-border: #E5E7EB;
+    --c-input: #F0F1F5;
+    --c-text: #2A2C3A;
+    --c-text-2: #687086;
+    --c-border: #E8EAF0;
   }
 }
 
@@ -122,7 +122,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--c-primary);
-  box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.25);
+  box-shadow: 0 0 0 3px var(--c-primary-300);
 }
 
 /* Button Base Styles */
@@ -139,7 +139,7 @@ button:disabled {
 
 /* Accessibility */
 *:focus-visible {
-  outline: 2px solid var(--c-primary);
+  outline: 2px solid var(--c-primary-300);
   outline-offset: 2px;
 }
 
