@@ -1,39 +1,40 @@
-@import './base.css';
+@import "./base.css";
 
 /* Design Tokens - New Dark Theme */
 :root {
   /* Primary Colors */
-  --c-primary: #7E57C2;
-  --c-primary-600: #673AB7;
-  --c-primary-300: #9575CD;
+  --c-primary: #7e57c2;
+  --c-primary-600: #673ab7;
+  --c-primary-300: #9575cd;
 
   /* Neutral Colors - Dark */
-  --c-bg: #1A1B26;
-  --c-surface: #2A2C3A;
-  --c-input: #3E4057;
-  --c-text: #E0E0E0;
-  --c-text-2: #A0A8C2;
+  --c-bg: #1a1b26;
+  --c-surface: #2a2c3a;
+  --c-input: #3e4057;
+  --c-text: #e0e0e0;
+  --c-text-2: #a0a8c2;
   --c-border: #343644;
+  --c-img-border: #888;
 
   /* Functional Colors */
-  --c-success: #4CAF50;
-  --c-success-light: #81C784;
-  --c-warning: #FF9800;
-  --c-warning-light: #FFB74D;
-  --c-error: #F44336;
-  --c-error-dark: #E53935;
-  --c-info: #2196F3;
+  --c-success: #4caf50;
+  --c-success-light: #81c784;
+  --c-warning: #ff9800;
+  --c-warning-light: #ffb74d;
+  --c-error: #f44336;
+  --c-error-dark: #e53935;
+  --c-info: #2196f3;
 
   /* Code Block Colors */
-  --c-code-bg: #1E1E1E;
-  --c-code-border: #2C2C2C;
-  --c-code-line-number: #7C7C7C;
-  --c-code-keyword: #C586C0;
-  --c-code-string: #CE9178;
-  --c-code-function: #4FC1FF;
+  --c-code-bg: #1e1e1e;
+  --c-code-border: #2c2c2c;
+  --c-code-line-number: #7c7c7c;
+  --c-code-keyword: #c586c0;
+  --c-code-string: #ce9178;
+  --c-code-function: #4fc1ff;
 
   /* Gradients */
-  --g-primary: linear-gradient(90deg, #9575CD 0%, #7E57C2 100%);
+  --g-primary: linear-gradient(90deg, #9575cd 0%, #7e57c2 100%);
 
   /* Spacing */
   --space-xs: 4px;
@@ -68,8 +69,9 @@
   --z-tooltip: 1300;
 
   /* Typography */
-  --font-family: Inter, 'SF Pro Text', 'PingFang SC', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  --font-family: Inter, "SF Pro Text", "PingFang SC", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", "Monaco", "Courier New", monospace;
   --font-size-xs: 12px;
   --font-size-sm: 14px;
   --font-size-base: 16px;
@@ -83,12 +85,13 @@
 /* Light Theme (optional) */
 @media (prefers-color-scheme: light) {
   :root {
-    --c-bg: #F7F8FC;
-    --c-surface: #FFFFFF;
-    --c-input: #F0F1F5;
-    --c-text: #2A2C3A;
+    --c-bg: #f7f8fc;
+    --c-surface: #ffffff;
+    --c-input: #f0f1f5;
+    --c-text: #2a2c3a;
     --c-text-2: #687086;
-    --c-border: #E8EAF0;
+    --c-border: #ddd;
+    --c-img-border: #ddd;
   }
 }
 

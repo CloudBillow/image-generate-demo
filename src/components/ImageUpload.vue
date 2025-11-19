@@ -5,15 +5,13 @@
         {{ label }}
         <span v-if="required" class="required">*</span>
       </label>
-      <span v-if="multiple" class="upload-count">{{ images.length }}/{{ max }}</span>
+      <span v-if="multiple" class="upload-count"
+        >{{ images.length }}/{{ max }}</span
+      >
     </div>
 
     <div class="images-grid">
-      <div
-        v-for="(image, index) in images"
-        :key="index"
-        class="image-item"
-      >
+      <div v-for="(image, index) in images" :key="index" class="image-item">
         <img :src="image" :alt="`参考图 ${index + 1}`" class="image-preview" />
         <button
           class="remove-button"
@@ -27,6 +25,7 @@
       <div
         v-if="canAddMore"
         class="upload-area"
+        :style="images.length > 0 ? 'aspect-ratio:initial;' : ''"
         @click="triggerFileInput"
         @dragover.prevent="isDragging = true"
         @dragleave.prevent="isDragging = false"
@@ -42,7 +41,11 @@
           class="file-input"
         />
         <div class="upload-content">
-          <img src="@/assets/icons/add-image.svg" alt="上传" class="upload-icon" />
+          <img
+            src="@/assets/icons/add-image.svg"
+            alt="上传"
+            class="upload-icon"
+          />
         </div>
       </div>
     </div>
@@ -52,99 +55,99 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue";
 
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   multiple: {
     type: Boolean,
-    default: false
+    default: false,
   },
   max: {
     type: Number,
-    default: 10
+    default: 10,
   },
   label: {
     type: String,
-    default: '参考图'
+    default: "参考图",
   },
   required: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
-const fileInput = ref(null)
-const isDragging = ref(false)
-const error = ref('')
+const fileInput = ref(null);
+const isDragging = ref(false);
+const error = ref("");
 
-const images = computed(() => props.modelValue)
+const images = computed(() => props.modelValue);
 
 const canAddMore = computed(() => {
   if (!props.multiple) {
-    return images.value.length === 0
+    return images.value.length === 0;
   }
-  return images.value.length < props.max
-})
+  return images.value.length < props.max;
+});
 
 const triggerFileInput = () => {
-  fileInput.value?.click()
-}
+  fileInput.value?.click();
+};
 
 const handleFileSelect = (event) => {
-  const files = Array.from(event.target.files)
-  processFiles(files)
-  event.target.value = '' // Reset input
-}
+  const files = Array.from(event.target.files);
+  processFiles(files);
+  event.target.value = ""; // Reset input
+};
 
 const handleDrop = (event) => {
-  isDragging.value = false
-  const files = Array.from(event.dataTransfer.files).filter(file =>
-    file.type.startsWith('image/')
-  )
-  processFiles(files)
-}
+  isDragging.value = false;
+  const files = Array.from(event.dataTransfer.files).filter((file) =>
+    file.type.startsWith("image/")
+  );
+  processFiles(files);
+};
 
 const processFiles = (files) => {
-  error.value = ''
+  error.value = "";
 
-  const remainingSlots = props.multiple ? props.max - images.value.length : 1
-  const filesToProcess = files.slice(0, remainingSlots)
+  const remainingSlots = props.multiple ? props.max - images.value.length : 1;
+  const filesToProcess = files.slice(0, remainingSlots);
 
   if (files.length > filesToProcess.length) {
-    error.value = `最多只能上传 ${props.max} 张图片`
+    error.value = `最多只能上传 ${props.max} 张图片`;
   }
 
-  filesToProcess.forEach(file => {
+  filesToProcess.forEach((file) => {
     if (file.size > 10 * 1024 * 1024) {
-      error.value = '图片大小不能超过 10MB'
-      return
+      error.value = "图片大小不能超过 10MB";
+      return;
     }
 
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (e) => {
       const newImages = props.multiple
         ? [...images.value, e.target.result]
-        : [e.target.result]
-      emit('update:modelValue', newImages)
-    }
+        : [e.target.result];
+      emit("update:modelValue", newImages);
+    };
     reader.onerror = () => {
-      error.value = '图片读取失败'
-    }
-    reader.readAsDataURL(file)
-  })
-}
+      error.value = "图片读取失败";
+    };
+    reader.readAsDataURL(file);
+  });
+};
 
 const removeImage = (index) => {
-  const newImages = images.value.filter((_, i) => i !== index)
-  emit('update:modelValue', newImages)
-  error.value = ''
-}
+  const newImages = images.value.filter((_, i) => i !== index);
+  emit("update:modelValue", newImages);
+  error.value = "";
+};
 </script>
 
 <style scoped>
@@ -176,7 +179,7 @@ const removeImage = (index) => {
 
 .images-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-md);
 }
 
@@ -222,7 +225,8 @@ const removeImage = (index) => {
 
 .upload-area {
   aspect-ratio: 1;
-  border: 2px dashed #bebec4;
+  /* border: 2px dashed #ddd !important; */
+  border: 2px dashed var(--c-img-border);
   border-radius: var(--radius-button);
   background-color: var(--c-surface);
   display: flex;
@@ -231,6 +235,7 @@ const removeImage = (index) => {
   justify-content: center;
   cursor: pointer;
   transition: all var(--motion-base) var(--easing);
+  box-sizing: border-box;
 }
 
 .upload-area:hover {
