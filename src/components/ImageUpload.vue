@@ -42,9 +42,7 @@
           class="file-input"
         />
         <div class="upload-content">
-          <span class="upload-icon">📷</span>
-          <span class="upload-text">点击或拖拽上传</span>
-          <span class="upload-hint">支持 JPG、PNG 格式</span>
+          <img src="@/assets/icons/add-image.svg" alt="上传" class="upload-icon" />
         </div>
       </div>
     </div>
@@ -252,26 +250,16 @@ const removeImage = (index) => {
 
 .upload-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-md);
-  text-align: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .upload-icon {
-  font-size: var(--font-size-2xl);
-}
-
-.upload-text {
-  font-size: var(--font-size-sm);
-  color: var(--c-text);
-  font-weight: 500;
-}
-
-.upload-hint {
-  font-size: var(--font-size-xs);
-  color: var(--c-text-2);
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
 }
 
 .error-message {
