@@ -20,7 +20,6 @@
 
     <div v-if="isLoading && results.length === 0" class="loading-state">
       <div class="loading-spinner"></div>
-      <div class="loading-text">正在生成图片...</div>
     </div>
 
     <div v-if="results.length > 0" class="results-grid">
@@ -28,6 +27,7 @@
         v-for="(result, index) in results"
         :key="index"
         class="result-item"
+        :style="{ aspectRatio: getAspectRatio(result.size) }"
       >
         <div v-if="result.loading" class="result-loading">
           <div class="loading-spinner"></div>
@@ -273,6 +273,19 @@ const downloadImage = async (url, index) => {
     ElMessage.error('下载失败，请尝试右键保存图片')
   }
 }
+
+/**
+ * Calculate aspect ratio from size string (e.g., "4096x4096" -> "1 / 1")
+ */
+const getAspectRatio = (size) => {
+  if (!size) return '16 / 9' // Default aspect ratio
+
+  const match = size.match(/(\d+)x(\d+)/)
+  if (!match) return '16 / 9'
+
+  const [, width, height] = match
+  return `${width} / ${height}`
+}
 </script>
 
 <style scoped>
@@ -295,10 +308,12 @@ const downloadImage = async (url, index) => {
 }
 
 .status-badge {
-  padding: var(--space-xxs) var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
   border-radius: var(--radius-button);
-  font-size: var(--font-size-xxs);
+  font-size: var(--font-size-xs);
   font-weight: 500;
+  min-width: 64px;
+  text-align: center;
 }
 
 .status-preparing,
@@ -342,8 +357,7 @@ const downloadImage = async (url, index) => {
   line-height: var(--line-height);
 }
 
-.empty-state,
-.loading-state {
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -351,6 +365,15 @@ const downloadImage = async (url, index) => {
   padding: var(--space-3xl);
   background-color: var(--c-surface);
   border-radius: var(--radius-container);
+  text-align: center;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px var(--space-3xl) var(--space-3xl);
   text-align: center;
 }
 
@@ -372,34 +395,54 @@ const downloadImage = async (url, index) => {
 }
 
 .loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--c-border);
-  border-top-color: var(--c-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  width: 40px;
+  height: 20px;
+  --c: no-repeat radial-gradient(farthest-side, var(--c-primary) 93%, #0000);
+  background:
+    var(--c) 0    0,
+    var(--c) 50%  0,
+    var(--c) 100% 0;
+  background-size: 8px 8px;
+  position: relative;
+  animation: l4-0 1s linear infinite alternate;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.loading-spinner:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  background: var(--c-primary);
+  left: 0;
+  top: 0;
+  animation:
+    l4-1 1s  linear infinite alternate,
+    l4-2 0.5s cubic-bezier(0, 200, 0.8, 200) infinite;
 }
 
-.loading-text {
-  margin-top: var(--space-md);
-  font-size: var(--font-size-sm);
-  color: var(--c-text-2);
+@keyframes l4-0 {
+  0%      { background-position: 0  100%, 50% 0,    100% 0 }
+  8%, 42% { background-position: 0  0,    50% 0,    100% 0 }
+  50%     { background-position: 0  0,    50% 100%, 100% 0 }
+  58%, 92%{ background-position: 0  0,    50% 0,    100% 0 }
+  100%    { background-position: 0  0,    50% 0,    100% 100% }
+}
+
+@keyframes l4-1 {
+  100% { left: calc(100% - 8px) }
+}
+
+@keyframes l4-2 {
+  100% { top: -0.1px }
 }
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 10fr));
   gap: var(--space-lg);
 }
 
 .result-item {
-  aspect-ratio: 16/9;
   background-color: var(--c-surface);
   border-radius: var(--radius-container);
   overflow: hidden;
@@ -489,12 +532,14 @@ const downloadImage = async (url, index) => {
 }
 
 .result-info {
-  font-size: var(--font-size-xxs);
+  font-size: var(--font-size-xs);
   color: white;
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: var(--space-xxs) var(--space-xs);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-button);
   align-self: flex-start;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .usage-info {
