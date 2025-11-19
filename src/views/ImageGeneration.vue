@@ -219,9 +219,9 @@ const handleCancel = () => {
 
 .page-content {
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: var(--space-2xl);
-  padding: var(--space-2xl);
+  grid-template-columns: 360px 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
   max-width: 1800px;
   margin: 0 auto;
 }
@@ -229,24 +229,24 @@ const handleCancel = () => {
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+  gap: var(--space-xl);
   height: fit-content;
   position: sticky;
-  top: var(--space-2xl);
+  top: var(--space-xl);
 }
 
 .control-section {
   background-color: var(--c-surface);
   border-radius: var(--radius-container);
-  padding: var(--space-xl);
+  padding: var(--space-lg);
   box-shadow: var(--shadow-low);
 }
 
 .section-title {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--c-text);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .main-content {
@@ -256,10 +256,13 @@ const handleCancel = () => {
 @media (max-width: 1200px) {
   .page-content {
     grid-template-columns: 1fr;
+    padding: var(--space-lg);
+    gap: var(--space-lg);
   }
 
   .sidebar {
     position: static;
+    gap: var(--space-lg);
   }
 }
 </style>

@@ -33,7 +33,7 @@ const modes = [
 <style scoped>
 .mode-switcher {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   padding: var(--space-xs);
   background-color: var(--c-surface);
   border-radius: var(--radius-button);
@@ -42,11 +42,11 @@ const modes = [
 
 .mode-button {
   flex: 1;
-  padding: var(--space-md) var(--space-xl);
+  padding: var(--space-sm) var(--space-md);
   border: none;
   background-color: transparent;
   color: var(--c-text-2);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: 500;
   border-radius: var(--radius-button);
   transition: all var(--motion-base) var(--easing);

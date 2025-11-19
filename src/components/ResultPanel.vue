@@ -279,7 +279,7 @@ const downloadImage = async (url, index) => {
 .result-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
 .panel-header {
@@ -289,15 +289,15 @@ const downloadImage = async (url, index) => {
 }
 
 .panel-title {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--c-text);
 }
 
 .status-badge {
-  padding: var(--space-xs) var(--space-md);
+  padding: var(--space-xxs) var(--space-sm);
   border-radius: var(--radius-button);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xxs);
   font-weight: 500;
 }
 
@@ -323,21 +323,21 @@ const downloadImage = async (url, index) => {
 }
 
 .error-box {
-  padding: var(--space-lg);
+  padding: var(--space-md);
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--c-error);
   border-radius: var(--radius-container);
 }
 
 .error-title {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--c-error);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .error-details {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--c-error);
   line-height: var(--line-height);
 }
@@ -348,22 +348,22 @@ const downloadImage = async (url, index) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4xl);
+  padding: var(--space-3xl);
   background-color: var(--c-surface);
   border-radius: var(--radius-container);
   text-align: center;
 }
 
 .empty-icon {
-  font-size: 64px;
-  margin-bottom: var(--space-lg);
+  font-size: 48px;
+  margin-bottom: var(--space-md);
   opacity: 0.5;
 }
 
 .empty-text {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-md);
   color: var(--c-text);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .empty-hint {
@@ -372,8 +372,8 @@ const downloadImage = async (url, index) => {
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border: 3px solid var(--c-border);
   border-top-color: var(--c-primary);
   border-radius: 50%;
@@ -387,19 +387,19 @@ const downloadImage = async (url, index) => {
 }
 
 .loading-text {
-  margin-top: var(--space-lg);
-  font-size: var(--font-size-base);
+  margin-top: var(--space-md);
+  font-size: var(--font-size-sm);
   color: var(--c-text-2);
 }
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-lg);
 }
 
 .result-item {
-  aspect-ratio: 1;
+  aspect-ratio: 16/9;
   background-color: var(--c-surface);
   border-radius: var(--radius-container);
   overflow: hidden;
@@ -419,22 +419,22 @@ const downloadImage = async (url, index) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .loading-text-small {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--c-text-2);
 }
 
 .error-icon {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
 }
 
 .error-text-small {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--c-error);
-  padding: 0 var(--space-lg);
+  padding: 0 var(--space-md);
   text-align: center;
 }
 
@@ -462,7 +462,7 @@ const downloadImage = async (url, index) => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: var(--space-md);
+  padding: var(--space-sm);
 }
 
 .result-success:hover .result-overlay {
@@ -471,13 +471,16 @@ const downloadImage = async (url, index) => {
 
 .result-actions {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   justify-content: flex-end;
 }
 
 .result-actions :deep(.el-button) {
   background-color: rgba(255, 255, 255, 0.9);
   border: none;
+  width: 28px;
+  height: 28px;
+  font-size: var(--font-size-xs);
 }
 
 .result-actions :deep(.el-button:hover) {
@@ -486,41 +489,41 @@ const downloadImage = async (url, index) => {
 }
 
 .result-info {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xxs);
   color: white;
   background-color: rgba(0, 0, 0, 0.6);
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-xxs) var(--space-xs);
   border-radius: var(--radius-button);
   align-self: flex-start;
 }
 
 .usage-info {
-  padding: var(--space-lg);
+  padding: var(--space-md);
   background-color: var(--c-surface);
   border-radius: var(--radius-container);
   border: 1px solid var(--c-border);
 }
 
 .usage-title {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--c-text);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .usage-details {
   display: flex;
-  gap: var(--space-xl);
-  font-size: var(--font-size-sm);
+  gap: var(--space-lg);
+  font-size: var(--font-size-xs);
   color: var(--c-text-2);
 }
 
 .generation-time {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
   background-color: var(--c-surface);
   border-radius: var(--radius-container);
   border: 1px solid var(--c-border);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--c-text-2);
   text-align: center;
 }

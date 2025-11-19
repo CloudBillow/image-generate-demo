@@ -1,7 +1,7 @@
 <template>
   <div class="parameter-form">
     <div class="form-group">
-      <label for="apiKey" class="form-label form-label-with-link">
+      <label for="apiKey" class="form-label">
         <span>
           API Key
           <span class="required">*</span>
@@ -36,10 +36,9 @@
     <div v-if="needsReferenceImage" class="form-group">
       <ImageUpload
         v-model="formData.images"
-        :multiple="true"
+        :multiple="mode === 'images-to-images' || mode === 'multi-image-fusion'"
         :max="getReferenceImageMax()"
         :label="getReferenceImageLabel()"
-        :required="true"
       />
     </div>
 
@@ -172,7 +171,7 @@ const saveApiKey = () => {
 
 // Computed properties
 const needsReferenceImage = computed(() => {
-  return props.mode === 'image-to-image' || props.mode === 'images-to-images'
+  return props.mode === 'image-to-image' || props.mode === 'images-to-images' || props.mode === 'multi-image-fusion'
 })
 
 const supportsMultipleImages = computed(() => {
@@ -181,13 +180,14 @@ const supportsMultipleImages = computed(() => {
 
 // Helper methods for reference image configuration
 const getReferenceImageMax = () => {
-  if (props.mode === 'image-to-image' || props.mode === 'images-to-images') return 5
+  if (props.mode === 'multi-image-fusion') return 10
+  if (props.mode === 'images-to-images') return 4
   return 1
 }
 
 const getReferenceImageLabel = () => {
-  if (props.mode === 'image-to-image') return '参考图 (1-5张)'
-  if (props.mode === 'images-to-images') return '参考图 (1-5张)'
+  if (props.mode === 'multi-image-fusion') return '参考图 (2-10张)'
+  if (props.mode === 'images-to-images') return '参考图 (2-4张)'
   return '参考图'
 }
 
@@ -196,8 +196,17 @@ const isValid = computed(() => {
     return false
   }
 
-  return !((props.mode === 'image-to-image' || props.mode === 'images-to-images') &&
-      (formData.value.images.length < 1 || formData.value.images.length > 5));
+  if (props.mode === 'image-to-image' && formData.value.images.length !== 1) {
+    return false
+  }
+
+  if (props.mode === 'images-to-images' && (formData.value.images.length < 2 || formData.value.images.length > 4)) {
+    return false
+  }
+
+  return !(props.mode === 'multi-image-fusion' && (formData.value.images.length < 2 || formData.value.images.length > 10));
+
+
 })
 
 // Watch mode changes and reset relevant fields
@@ -220,13 +229,29 @@ const handleSubmit = () => {
     return
   }
 
-  if (props.mode === 'image-to-image' || props.mode === 'images-to-images') {
-    if (formData.value.images.length < 1) {
-      validationError.value = '请至少上传 1 张参考图'
+  if (props.mode === 'image-to-image' && formData.value.images.length !== 1) {
+    validationError.value = '请上传 1 张参考图'
+    return
+  }
+
+  if (props.mode === 'images-to-images') {
+    if (formData.value.images.length < 2) {
+      validationError.value = '请至少上传 2 张参考图'
       return
     }
-    if (formData.value.images.length > 5) {
-      validationError.value = '最多上传 5 张参考图'
+    if (formData.value.images.length > 4) {
+      validationError.value = '最多上传 4 张参考图'
+      return
+    }
+  }
+
+  if (props.mode === 'multi-image-fusion') {
+    if (formData.value.images.length < 2) {
+      validationError.value = '请至少上传 2 张参考图'
+      return
+    }
+    if (formData.value.images.length > 10) {
+      validationError.value = '最多上传 10 张参考图'
       return
     }
   }
@@ -263,15 +288,19 @@ const handleSubmit = () => {
       break
 
     case 'image-to-image':
-      // 支持1-5张参考图
-      payload.image = formData.value.images.length === 1 ? formData.value.images[0] : formData.value.images
+      payload.image = formData.value.images[0]
+      payload.sequential_image_generation = 'disabled'
+      payload.stream = false
+      break
+
+    case 'multi-image-fusion':
+      payload.image = formData.value.images
       payload.sequential_image_generation = 'disabled'
       payload.stream = false
       break
 
     case 'images-to-images':
-      // 支持1-5张参考图
-      payload.image = formData.value.images.length === 1 ? formData.value.images[0] : formData.value.images
+      payload.image = formData.value.images
       payload.sequential_image_generation = 'auto'
       payload.sequential_image_generation_options = {
         max_images: formData.value.maxImages
@@ -292,40 +321,38 @@ const handleSubmit = () => {
 .parameter-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
 }
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
 }
 
 .form-label {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--c-text);
-}
-
-.form-label-with-link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
+}
+
+.required {
+  color: var(--c-error);
 }
 
 .help-link {
-  font-size: var(--font-size-xs);
-  font-weight: 400;
-  color: var(--c-primary);
+  font-size: var(--font-size-xxs);
+  color: var(--c-text-2);
   text-decoration: none;
-  transition: all var(--motion-base) var(--easing);
+  margin-left: auto;
 }
 
 .help-link:hover {
@@ -333,35 +360,31 @@ const handleSubmit = () => {
   text-decoration: underline;
 }
 
-.required {
-  color: var(--c-error);
-}
-
 .form-input,
 .form-select {
-  padding: var(--space-md);
+  padding: var(--space-sm);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-input);
   background-color: var(--c-input);
   color: var(--c-text);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   transition: all var(--motion-base) var(--easing);
 }
 
 .form-textarea {
-  padding: var(--space-md);
+  padding: var(--space-sm);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-input);
   background-color: var(--c-input);
   color: var(--c-text);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-family: var(--font-family),serif;
   resize: vertical;
   transition: all var(--motion-base) var(--easing);
 }
 
 .form-hint {
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xxs);
   color: var(--c-text-2);
 }
 
@@ -373,15 +396,15 @@ const handleSubmit = () => {
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   cursor: pointer;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--c-text);
 }
 
 .form-checkbox {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   accent-color: var(--c-primary);
 }
@@ -393,10 +416,10 @@ const handleSubmit = () => {
 
 .btn-primary,
 .btn-secondary {
-  padding: var(--space-md) var(--space-2xl);
+  padding: var(--space-sm) var(--space-xl);
   border: none;
   border-radius: var(--radius-button);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: 500;
   transition: all var(--motion-base) var(--easing);
 }
@@ -418,7 +441,7 @@ const handleSubmit = () => {
 }
 
 .btn-secondary {
-  padding: var(--space-md) var(--space-xl);
+  padding: var(--space-sm) var(--space-lg);
   background-color: transparent;
   color: var(--c-text-2);
   border: 1px solid var(--c-border);
@@ -430,11 +453,11 @@ const handleSubmit = () => {
 }
 
 .error-message {
-  padding: var(--space-md);
+  padding: var(--space-sm);
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--c-error);
   border-radius: var(--radius-button);
   color: var(--c-error);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
 }
 </style>
