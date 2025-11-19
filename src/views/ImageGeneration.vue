@@ -80,7 +80,8 @@ const handleGenerate = async ({ apiKey, payload, watermarkText: wmText }) => {
       // Initialize result placeholders for expected images
       const expectedCount = payload.sequential_image_generation_options?.max_images || 1
       results.value = Array.from({ length: expectedCount }, () => ({
-        loading: true
+        loading: true,
+        size: payload.size // Add size for proper aspect ratio
       }))
 
       let imageIndex = 0
@@ -124,7 +125,8 @@ const handleGenerate = async ({ apiKey, payload, watermarkText: wmText }) => {
             const errorResult = {
               loading: false,
               error: chunk.error,
-              image_index: imageIndex
+              image_index: imageIndex,
+              size: payload.size // Add size for proper aspect ratio
             }
 
             if (imageIndex < results.value.length) {

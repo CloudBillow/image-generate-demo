@@ -67,28 +67,15 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label for="watermarkText" class="form-label">水印文字</label>
-        <input
-          id="watermarkText"
-          v-model="formData.watermarkText"
-          type="text"
-          class="form-input"
-          placeholder="输入水印文字（留空则不添加水印）"
-        />
-      </div>
-
-      <div v-if="supportsMultipleImages" class="form-group checkbox-group">
-        <label class="checkbox-label">
-          <input
-            v-model="formData.stream"
-            type="checkbox"
-            class="form-checkbox"
-          />
-          <span>流式输出</span>
-        </label>
-      </div>
+    <div class="form-group">
+      <label for="watermarkText" class="form-label">水印文字</label>
+      <input
+        id="watermarkText"
+        v-model="formData.watermarkText"
+        type="text"
+        class="form-input"
+        placeholder="输入水印文字（留空则不添加水印）"
+      />
     </div>
 
     <div class="form-actions">
@@ -137,8 +124,7 @@ const formData = ref({
   images: [],
   size: '4096x4096',
   watermarkText: '',
-  maxImages: 3,
-  stream: true
+  maxImages: 3
 })
 
 const validationError = ref('')
@@ -284,7 +270,7 @@ const handleSubmit = () => {
       payload.sequential_image_generation_options = {
         max_images: formData.value.maxImages
       }
-      payload.stream = formData.value.stream
+      payload.stream = true
       break
 
     case 'image-to-image':
@@ -305,7 +291,7 @@ const handleSubmit = () => {
       payload.sequential_image_generation_options = {
         max_images: formData.value.maxImages
       }
-      payload.stream = formData.value.stream
+      payload.stream = true
       break
   }
 
