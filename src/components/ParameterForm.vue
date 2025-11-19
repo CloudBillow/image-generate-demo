@@ -335,7 +335,7 @@ const handleSubmit = () => {
 }
 
 .help-link {
-  font-size: var(--font-size-xxs);
+  font-size: var(--font-size-xs);
   color: var(--c-text-2);
   text-decoration: none;
   margin-left: auto;
@@ -370,7 +370,7 @@ const handleSubmit = () => {
 }
 
 .form-hint {
-  font-size: var(--font-size-xxs);
+  font-size: var(--font-size-xs);
   color: var(--c-text-2);
 }
 

@@ -222,7 +222,7 @@ const removeImage = (index) => {
 
 .upload-area {
   aspect-ratio: 1;
-  border: 2px dashed var(--c-border);
+  border: 2px dashed #bebec4;
   border-radius: var(--radius-button);
   background-color: var(--c-surface);
   display: flex;
