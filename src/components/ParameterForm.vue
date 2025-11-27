@@ -2,10 +2,7 @@
   <div class="parameter-form">
     <div class="form-group">
       <label for="apiKey" class="form-label">
-        <span>
-          API Key
-          <span class="required">*</span>
-        </span>
+        <span>API Key<span class="required">*</span></span>
         <a href="https://www.volcengine.com/docs/82379/1541594" target="_blank" class="help-link">如何获取?</a>
       </label>
       <input
