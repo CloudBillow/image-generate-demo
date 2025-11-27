@@ -12,7 +12,7 @@
           <BananaProParameterForm
             :mode="currentMode"
             :is-loading="isGenerating"
-            storage-key="yi_bananapro_api_key"
+            storage-key="plato_api_key"
             @submit="handleGenerate"
             @cancel="handleCancel"
           />
@@ -43,7 +43,7 @@ import {
   textToImage,
   imageToImage,
   getErrorMessage
-} from '../services/bananaProApi.js'
+} from '../services/platoApi.js'
 
 // State
 const currentMode = ref('text-to-image')

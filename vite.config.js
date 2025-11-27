@@ -30,6 +30,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/gemini/, ""),
       },
+      "/plato": {
+        target: "https://api.bltcy.ai",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/plato/, ""),
+      },
     },
   },
 });

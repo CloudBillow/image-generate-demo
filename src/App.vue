@@ -18,6 +18,12 @@ const menuItems = [
     icon: 'Picture'
   },
   {
+    path: '/plato-bananapro-image',
+    name: 'plato-bananapro-image',
+    label: '柏拉图BananaPro生图',
+    icon: 'Picture'
+  },
+  {
     path: '/yi-sora2-video',
     name: 'yi-sora2-video',
     label: 'API易Sora2生视频',

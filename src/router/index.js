@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ImageGeneration from '../views/ImageGeneration.vue'
 import VideoGeneration from '../views/VideoGeneration.vue'
 import BananaProImageGeneration from '../views/BananaProImageGeneration.vue'
+import PlatoImageGeneration from '../views/PlatoImageGeneration.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,12 @@ const router = createRouter({
       name: 'yi-bananapro-image',
       component: BananaProImageGeneration,
       meta: { title: 'API易BananaPro生图' }
+    },
+    {
+      path: '/plato-bananapro-image',
+      name: 'plato-bananapro-image',
+      component: PlatoImageGeneration,
+      meta: { title: '柏拉图BananaPro生图' }
     },
     {
       path: '/yi-sora2-video',

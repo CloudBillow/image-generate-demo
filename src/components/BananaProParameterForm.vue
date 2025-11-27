@@ -115,6 +115,10 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false
+  },
+  storageKey: {
+    type: String,
+    default: 'bananapro_api_key'
   }
 })
 
@@ -146,7 +150,7 @@ const RESOLUTION_REFERENCE = {
 
 // 加载保存的API Key
 onMounted(() => {
-  const savedApiKey = localStorage.getItem('bananapro_api_key')
+  const savedApiKey = localStorage.getItem(props.storageKey)
   if (savedApiKey) {
     formData.value.apiKey = savedApiKey
   }
@@ -155,7 +159,7 @@ onMounted(() => {
 // 保存API Key
 const saveApiKey = () => {
   if (formData.value.apiKey) {
-    localStorage.setItem('bananapro_api_key', formData.value.apiKey)
+    localStorage.setItem(props.storageKey, formData.value.apiKey)
   }
 }
 
