@@ -12,6 +12,12 @@ const menuItems = [
     icon: 'Picture'
   },
   {
+    path: '/yi-bananapro-image',
+    name: 'yi-bananapro-image',
+    label: 'API易BananaPro生图',
+    icon: 'Picture'
+  },
+  {
     path: '/yi-sora2-video',
     name: 'yi-sora2-video',
     label: 'API易Sora2生视频',

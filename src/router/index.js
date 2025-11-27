@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ImageGeneration from '../views/ImageGeneration.vue'
 import VideoGeneration from '../views/VideoGeneration.vue'
+import BananaProImageGeneration from '../views/BananaProImageGeneration.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,12 @@ const router = createRouter({
       name: 'volcengine-seedream4-image',
       component: ImageGeneration,
       meta: { title: '火山Seedream4.0生图' }
+    },
+    {
+      path: '/yi-bananapro-image',
+      name: 'yi-bananapro-image',
+      component: BananaProImageGeneration,
+      meta: { title: 'API易BananaPro生图' }
     },
     {
       path: '/yi-sora2-video',
