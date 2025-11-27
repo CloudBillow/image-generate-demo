@@ -12,8 +12,8 @@ const menuItems = [
     icon: 'Picture'
   },
   {
-    path: '/apiyi-video',
-    name: 'apiyi-video',
+    path: '/video-generation',
+    name: 'video-generation',
     label: 'API易生视频',
     icon: 'VideoCamera'
   }

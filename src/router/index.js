@@ -16,8 +16,8 @@ const router = createRouter({
       meta: { title: '火山引擎生图' }
     },
     {
-      path: '/apiyi-video',
-      name: 'apiyi-video',
+      path: '/video-generation',
+      name: 'video-generation',
       component: VideoGeneration,
       meta: { title: 'API易生视频' }
     }
