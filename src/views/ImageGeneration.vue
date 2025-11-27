@@ -224,7 +224,7 @@ const handleCancel = () => {
   grid-template-columns: 360px 1fr;
   gap: var(--space-xl);
   padding: var(--space-xl);
-  max-width: 1800px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
