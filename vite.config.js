@@ -25,6 +25,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/sora/, ""),
       },
+      "/gemini": {
+        target: "https://api.apiyi.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/gemini/, ""),
+      },
     },
   },
 });

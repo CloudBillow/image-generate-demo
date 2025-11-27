@@ -3,7 +3,10 @@
  * 支持文生图和图生图功能
  */
 
-const API_ENDPOINT = 'https://api.apiyi.com/v1beta/models/gemini-3-pro-image-preview:generateContent'
+// Use Vite proxy in development, direct URL in production
+const API_ENDPOINT = import.meta.env.DEV
+  ? '/gemini/v1beta/models/gemini-3-pro-image-preview:generateContent'
+  : 'https://api.apiyi.com/v1beta/models/gemini-3-pro-image-preview:generateContent'
 
 /**
  * 文生图 - Text to Image
@@ -110,6 +113,8 @@ async function callGeminiApi({ apiKey, payload, signal }) {
     'Authorization': `Bearer ${apiKey}`
   }
 
+  console.log('Calling Gemini API with payload:', JSON.stringify(payload, null, 2))
+
   try {
     const response = await fetch(API_ENDPOINT, {
       method: 'POST',
@@ -118,15 +123,33 @@ async function callGeminiApi({ apiKey, payload, signal }) {
       signal
     })
 
+    console.log('Response status:', response.status, response.statusText)
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
+      let errorData = {}
+      let errorText = ''
+
+      try {
+        errorText = await response.text()
+        errorData = JSON.parse(errorText)
+      } catch (e) {
+        console.error('Failed to parse error response:', errorText)
+      }
+
+      console.error('API Error:', errorData)
+
       throw new Error(
         errorData.error?.message ||
+        errorData.message ||
         `HTTP ${response.status}: ${response.statusText}`
       )
     }
 
-    const data = await response.json()
+    const responseText = await response.text()
+    console.log('Response text length:', responseText.length)
+
+    const data = JSON.parse(responseText)
+    console.log('Parsed response data:', data)
 
     // 解析响应数据
     if (!data.candidates || data.candidates.length === 0) {
