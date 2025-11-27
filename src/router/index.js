@@ -10,16 +10,16 @@ const router = createRouter({
       redirect: '/volcengine-image'
     },
     {
-      path: '/volcengine-image',
-      name: 'volcengine-image',
+      path: '/volcengine-seedream4-image',
+      name: 'volcengine-seedream4-image',
       component: ImageGeneration,
-      meta: { title: '火山引擎生图' }
+      meta: { title: '火山Seedream4.0生图' }
     },
     {
-      path: '/video-generation',
-      name: 'video-generation',
+      path: '/yi-sora2-video',
+      name: 'yi-sora2-video',
       component: VideoGeneration,
-      meta: { title: 'API易生视频' }
+      meta: { title: 'API易Sora2生视频' }
     }
   ]
 })

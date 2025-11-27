@@ -6,15 +6,15 @@ const route = useRoute()
 
 const menuItems = [
   {
-    path: '/volcengine-image',
-    name: 'volcengine-image',
-    label: '火山引擎生图',
+    path: '/volcengine-seedream4-image',
+    name: 'volcengine-seedream4-image',
+    label: '火山Seedream4.0生图',
     icon: 'Picture'
   },
   {
-    path: '/video-generation',
-    name: 'video-generation',
-    label: 'API易生视频',
+    path: '/yi-sora2-video',
+    name: 'yi-sora2-video',
+    label: 'API易Sora2生视频',
     icon: 'VideoCamera'
   }
 ]
