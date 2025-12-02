@@ -113,32 +113,56 @@ const handleDrop = (event) => {
   processFiles(files);
 };
 
-// 压缩图片函数
+// 压缩图片函数 - 确保最终base64小于目标大小
 const compressImage = async (file, targetSizeInMB = 10) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+    const targetBytes = targetSizeInMB * 1024 * 1024;
 
     reader.onload = (e) => {
       const img = new Image();
 
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
+      img.onload = async () => {
+        // 计算base64大小（约为原始大小的4/3）
+        const base64Size = e.target.result.length * 0.75;
 
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-
-        // 如果文件小于目标大小，直接返回原图
-        if (file.size <= targetSizeInMB * 1024 * 1024) {
+        // 如果base64小于目标大小，直接返回
+        if (base64Size <= targetBytes) {
           resolve(e.target.result);
           return;
         }
 
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // 如果需要压缩，先尝试缩小尺寸
+        // 预估需要缩小的比例（base64约为实际的4/3倍）
+        const targetRatio = Math.sqrt(targetBytes / base64Size);
+
+        // 保守估计，使用85%的目标比例以留出质量压缩空间
+        if (targetRatio < 1) {
+          width = Math.floor(img.width * targetRatio * 0.85);
+          height = Math.floor(img.height * targetRatio * 0.85);
+
+          // 最小尺寸限制
+          const minSize = 256;
+          if (width < minSize || height < minSize) {
+            const scale = minSize / Math.min(width, height);
+            width = Math.floor(width * scale);
+            height = Math.floor(height * scale);
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
         // 使用二分查找找到最佳质量
-        let minQuality = 0.1;
+        let minQuality = 0.05;
         let maxQuality = 0.95;
-        let bestQuality = 0.95;
         let bestDataUrl = null;
 
         const tryCompress = (quality) => {
@@ -147,10 +171,12 @@ const compressImage = async (file, targetSizeInMB = 10) => {
               (blob) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
+                  const dataUrl = e.target.result;
+                  const size = dataUrl.length * 0.75; // 估算实际大小
                   resolveCompress({
-                    dataUrl: e.target.result,
-                    size: blob.size,
-                    quality: quality
+                    dataUrl,
+                    size,
+                    quality
                   });
                 };
                 reader.readAsDataURL(blob);
@@ -164,14 +190,13 @@ const compressImage = async (file, targetSizeInMB = 10) => {
         // 二分查找最佳质量
         const binarySearch = async () => {
           let iterations = 0;
-          const maxIterations = 10;
+          const maxIterations = 12;
 
           while (maxQuality - minQuality > 0.01 && iterations < maxIterations) {
             const midQuality = (minQuality + maxQuality) / 2;
             const result = await tryCompress(midQuality);
 
-            if (result.size <= targetSizeInMB * 1024 * 1024) {
-              bestQuality = result.quality;
+            if (result.size <= targetBytes) {
               bestDataUrl = result.dataUrl;
               minQuality = midQuality;
             } else {
@@ -181,10 +206,30 @@ const compressImage = async (file, targetSizeInMB = 10) => {
             iterations++;
           }
 
-          // 如果还是没找到合适的，使用最低质量
+          // 如果还没找到合适的，使用最低质量再试一次
           if (!bestDataUrl) {
             const result = await tryCompress(minQuality);
-            bestDataUrl = result.dataUrl;
+
+            // 如果还是太大，进一步缩小尺寸
+            if (result.size > targetBytes && width > 256 && height > 256) {
+              const scale = 0.8;
+              canvas.width = Math.floor(width * scale);
+              canvas.height = Math.floor(height * scale);
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+              const finalResult = await tryCompress(0.7);
+              bestDataUrl = finalResult.dataUrl;
+            } else {
+              bestDataUrl = result.dataUrl;
+            }
+          }
+
+          // 最终检查
+          const finalSize = bestDataUrl.length * 0.75;
+          if (finalSize > targetBytes) {
+            console.warn(`压缩后仍超过目标大小: ${(finalSize / 1024 / 1024).toFixed(2)}MB`);
+          } else {
+            console.log(`压缩成功: ${(finalSize / 1024 / 1024).toFixed(2)}MB`);
           }
 
           resolve(bestDataUrl);
