@@ -10,7 +10,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/volcengine-image'
+      redirect: '/volcengine-seedream4-image'
     },
     {
       path: '/volcengine-seedream4-image',
