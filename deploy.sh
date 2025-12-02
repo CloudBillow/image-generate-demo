@@ -24,15 +24,20 @@ echo -e "${YELLOW}开始部署流程...${NC}"
 echo -e "${YELLOW}========================================${NC}"
 echo ""
 
-# 1. 检查是否有未提交的代码
-echo -e "${YELLOW}[1/3] 检查 Git 状态...${NC}"
+# 1. 检查 Git 仓库
+echo -e "${YELLOW}[1/4] 检查 Git 仓库...${NC}"
 
 if [ ! -d ".git" ]; then
     echo -e "${RED}错误: 当前目录不是 Git 仓库！${NC}"
     exit 1
 fi
 
-# 检查是否有未提交的更改
+echo -e "${GREEN}✓ Git 仓库检查通过${NC}"
+echo ""
+
+# 2. 检查本地是否有未提交的代码
+echo -e "${YELLOW}[2/4] 检查本地未提交代码...${NC}"
+
 if [ -n "$(git status --porcelain)" ]; then
     echo -e "${RED}错误: 发现未提交的代码！${NC}"
     echo ""
@@ -45,11 +50,33 @@ if [ -n "$(git status --porcelain)" ]; then
     exit 1
 fi
 
-echo -e "${GREEN}✓ Git 状态检查通过 - 没有未提交的代码${NC}"
+echo -e "${GREEN}✓ 没有未提交的代码${NC}"
 echo ""
 
-# 2. 构建项目
-echo -e "${YELLOW}[2/3] 构建项目...${NC}"
+# 3. 拉取远端最新代码
+echo -e "${YELLOW}[3/4] 拉取远端最新代码...${NC}"
+
+# 获取当前分支名
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo -e "${YELLOW}当前分支: ${CURRENT_BRANCH}${NC}"
+
+# 拉取远端代码
+git pull origin "$CURRENT_BRANCH"
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}错误: 拉取远端代码失败！${NC}"
+    echo -e "${YELLOW}可能的原因:${NC}"
+    echo "  1. 网络连接问题"
+    echo "  2. 远端分支不存在"
+    echo "  3. 存在冲突"
+    exit 1
+fi
+
+echo -e "${GREEN}✓ 远端代码拉取成功${NC}"
+echo ""
+
+# 4. 构建项目
+echo -e "${YELLOW}[4/4] 构建项目...${NC}"
 
 # 删除旧的 dist 目录
 if [ -d "$LOCAL_DIST" ]; then
@@ -79,8 +106,8 @@ fi
 echo -e "${GREEN}✓ 项目构建成功${NC}"
 echo ""
 
-# 3. 部署到服务器
-echo -e "${YELLOW}[3/3] 部署到远程服务器...${NC}"
+# 5. 部署到服务器
+echo -e "${YELLOW}[5/5] 部署到远程服务器...${NC}"
 
 # 提示用户输入密码
 echo -e "${YELLOW}即将连接到 ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PORT}${NC}"
