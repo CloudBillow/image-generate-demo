@@ -113,7 +113,102 @@ const handleDrop = (event) => {
   processFiles(files);
 };
 
-const processFiles = (files) => {
+// 压缩图片函数
+const compressImage = async (file, targetSizeInMB = 10) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const img = new Image();
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        // 如果文件小于目标大小，直接返回原图
+        if (file.size <= targetSizeInMB * 1024 * 1024) {
+          resolve(e.target.result);
+          return;
+        }
+
+        // 使用二分查找找到最佳质量
+        let minQuality = 0.1;
+        let maxQuality = 0.95;
+        let bestQuality = 0.95;
+        let bestDataUrl = null;
+
+        const tryCompress = (quality) => {
+          return new Promise((resolveCompress) => {
+            canvas.toBlob(
+              (blob) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  resolveCompress({
+                    dataUrl: e.target.result,
+                    size: blob.size,
+                    quality: quality
+                  });
+                };
+                reader.readAsDataURL(blob);
+              },
+              'image/jpeg',
+              quality
+            );
+          });
+        };
+
+        // 二分查找最佳质量
+        const binarySearch = async () => {
+          let iterations = 0;
+          const maxIterations = 10;
+
+          while (maxQuality - minQuality > 0.01 && iterations < maxIterations) {
+            const midQuality = (minQuality + maxQuality) / 2;
+            const result = await tryCompress(midQuality);
+
+            if (result.size <= targetSizeInMB * 1024 * 1024) {
+              bestQuality = result.quality;
+              bestDataUrl = result.dataUrl;
+              minQuality = midQuality;
+            } else {
+              maxQuality = midQuality;
+            }
+
+            iterations++;
+          }
+
+          // 如果还是没找到合适的，使用最低质量
+          if (!bestDataUrl) {
+            const result = await tryCompress(minQuality);
+            bestDataUrl = result.dataUrl;
+          }
+
+          resolve(bestDataUrl);
+        };
+
+        binarySearch();
+      };
+
+      img.onerror = () => {
+        reject(new Error('图片加载失败'));
+      };
+
+      img.src = e.target.result;
+    };
+
+    reader.onerror = () => {
+      reject(new Error('文件读取失败'));
+    };
+
+    reader.readAsDataURL(file);
+  });
+};
+
+const processFiles = async (files) => {
   error.value = "";
 
   const remainingSlots = props.multiple ? props.max - images.value.length : 1;
@@ -123,24 +218,18 @@ const processFiles = (files) => {
     error.value = `最多只能上传 ${props.max} 张图片`;
   }
 
-  filesToProcess.forEach((file) => {
-    if (file.size > 10 * 1024 * 1024) {
-      error.value = "图片大小不能超过 10MB";
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
+  for (const file of filesToProcess) {
+    try {
+      const dataUrl = await compressImage(file);
       const newImages = props.multiple
-        ? [...images.value, e.target.result]
-        : [e.target.result];
+        ? [...images.value, dataUrl]
+        : [dataUrl];
       emit("update:modelValue", newImages);
-    };
-    reader.onerror = () => {
-      error.value = "图片读取失败";
-    };
-    reader.readAsDataURL(file);
-  });
+    } catch (err) {
+      error.value = err.message || "图片处理失败";
+      console.error('Image processing error:', err);
+    }
+  }
 };
 
 const removeImage = (index) => {
