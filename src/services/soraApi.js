@@ -4,7 +4,7 @@
  */
 
 // API 端点
-const API_ENDPOINT = '/sora/v1/chat/completions'
+const API_ENDPOINT = '/proxy-apiyi/v1/chat/completions'
 
 /**
  * 生成视频

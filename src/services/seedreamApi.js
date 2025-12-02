@@ -4,7 +4,7 @@
  */
 
 // Use Vite proxy in development, relative path in production
-const API_ENDPOINT = '/api/images/generations'
+const API_ENDPOINT = '/volcengine/images/generations'
 
 /**
  * Generate images using Seedream 4.0

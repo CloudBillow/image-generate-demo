@@ -4,8 +4,8 @@
  */
 
 // API 端点
-const SUBMIT_ENDPOINT = '/dashscope/api/v1/services/aigc/video-generation/video-synthesis'
-const QUERY_ENDPOINT = '/dashscope/api/v1/tasks'
+const SUBMIT_ENDPOINT = '/bailian/api/v1/services/aigc/video-generation/video-synthesis'
+const QUERY_ENDPOINT = '/bailian/api/v1/tasks'
 
 /**
  * 提交视频生成任务

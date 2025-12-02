@@ -15,35 +15,32 @@ export default defineConfig({
   server: {
     host: true,
     proxy: {
-      "/api": {
+      // 火山引擎 (Volcengine)
+      "/volcengine": {
         target: "https://ark.cn-beijing.volces.com",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "/api/v3"),
+        rewrite: (path) => path.replace(/^\/volcengine/, "/api/v3"),
       },
-      "/sora": {
+
+      // API易 (APIYi)
+      "/proxy-apiyi": {
         target: "https://api.apiyi.com",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/sora/, ""),
+        rewrite: (path) => path.replace(/^\/proxy-apiyi/, ""),
       },
-      "/gemini": {
-        target: "https://api.apiyi.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/gemini/, ""),
-      },
+
+      // 柏拉图 (Plato)
       "/plato": {
         target: "https://api.bltcy.ai",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/plato/, ""),
       },
-      "/plato-sora2": {
-        target: "https://api.bltcy.ai",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/plato-sora2/, ""),
-      },
-      "/dashscope": {
+
+      // 阿里百炼 (Alibaba Bailian/DashScope)
+      "/bailian": {
         target: "https://dashscope.aliyuncs.com",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/dashscope/, ""),
+        rewrite: (path) => path.replace(/^\/bailian/, ""),
       },
     },
   },

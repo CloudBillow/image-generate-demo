@@ -4,7 +4,7 @@
  */
 
 // API 端点
-const API_ENDPOINT = '/plato-sora2/v2/videos/generations'
+const API_ENDPOINT = '/plato/v2/videos/generations'
 
 /**
  * 生成视频（图生视频）

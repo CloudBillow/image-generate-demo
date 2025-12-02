@@ -5,7 +5,7 @@
 
 // Use Vite proxy in development, direct URL in production
 const API_ENDPOINT = import.meta.env.DEV
-  ? '/gemini/v1beta/models/gemini-3-pro-image-preview:generateContent'
+  ? '/proxy-apiyi/v1beta/models/gemini-3-pro-image-preview:generateContent'
   : 'https://api.apiyi.com/v1beta/models/gemini-3-pro-image-preview:generateContent'
 
 /**
