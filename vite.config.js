@@ -40,6 +40,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/plato-sora2/, ""),
       },
+      "/dashscope": {
+        target: "https://dashscope.aliyuncs.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/dashscope/, ""),
+      },
     },
   },
 });

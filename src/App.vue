@@ -34,6 +34,12 @@ const menuItems = [
     name: 'plato-sora2-video',
     label: '柏拉图Sora2生视频',
     icon: 'VideoCamera'
+  },
+  {
+    path: '/tongyi-wanxiang-video',
+    name: 'tongyi-wanxiang-video',
+    label: '通义万相2.5生视频',
+    icon: 'VideoCamera'
   }
 ]
 
