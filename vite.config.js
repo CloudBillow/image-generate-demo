@@ -35,6 +35,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/plato/, ""),
       },
+      "/plato-sora2": {
+        target: "https://api.bltcy.ai",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/plato-sora2/, ""),
+      },
     },
   },
 });

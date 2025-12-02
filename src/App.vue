@@ -28,6 +28,12 @@ const menuItems = [
     name: 'yi-sora2-video',
     label: 'API易Sora2生视频',
     icon: 'VideoCamera'
+  },
+  {
+    path: '/plato-sora2-video',
+    name: 'plato-sora2-video',
+    label: '柏拉图Sora2生视频',
+    icon: 'VideoCamera'
   }
 ]
 
