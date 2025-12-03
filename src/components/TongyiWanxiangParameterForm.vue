@@ -346,9 +346,37 @@ const handleSubmit = () => {
 }
 
 .checkbox-label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
   width: 16px;
   height: 16px;
+  border: 2px solid var(--c-border);
+  border-radius: 4px;
   cursor: pointer;
+  position: relative;
+  transition: all var(--motion-base) var(--easing);
+  background-color: var(--c-input);
+}
+
+.checkbox-label input[type="checkbox"]:hover {
+  border-color: var(--c-primary);
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+  background-color: var(--c-primary);
+  border-color: var(--c-primary);
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .form-actions {
