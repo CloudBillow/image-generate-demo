@@ -17,6 +17,19 @@
     </div>
 
     <div class="form-group">
+      <label for="model" class="form-label">AI 模型</label>
+      <select id="model" v-model="formData.model" class="form-select">
+        <option
+          v-for="option in MODEL_OPTIONS"
+          :key="option.value"
+          :value="option.value"
+        >
+          {{ option.label }} - {{ option.description }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
       <label for="prompt" class="form-label">
         提示词
         <span class="required">*</span>
@@ -121,10 +134,25 @@ const formData = ref({
   images: [],
   size: '4096x4096',
   watermarkText: '',
-  maxImages: 3
+  maxImages: 3,
+  model: 'doubao-seedream-4-5-251128'
 })
 
 const validationError = ref('')
+
+// 模型选项配置
+const MODEL_OPTIONS = [
+  {
+    label: 'Seedream 4.0',
+    value: 'doubao-seedream-4-0-250828',
+    description: '原始模型'
+  },
+  {
+    label: 'Seedream 4.5',
+    value: 'doubao-seedream-4-5-251128',
+    description: '最新版本'
+  }
+]
 
 // Load API Key from localStorage or URL parameter
 onMounted(() => {
@@ -170,7 +198,7 @@ const getReferenceImageMax = () => {
 
 const getReferenceImageLabel = () => {
   if (props.mode === 'multi-image-fusion') return '参考图 (2-10张)'
-  if (props.mode === 'images-to-images') return '参考图 (2-4张)'
+  if (props.mode === 'images-to-images') return '参考图 (1-4张)'
   return '参考图'
 }
 
@@ -183,7 +211,7 @@ const isValid = computed(() => {
     return false
   }
 
-  if (props.mode === 'images-to-images' && (formData.value.images.length < 2 || formData.value.images.length > 4)) {
+  if (props.mode === 'images-to-images' && (formData.value.images.length < 1 || formData.value.images.length > 4)) {
     return false
   }
 
@@ -218,8 +246,8 @@ const handleSubmit = () => {
   }
 
   if (props.mode === 'images-to-images') {
-    if (formData.value.images.length < 2) {
-      validationError.value = '请至少上传 2 张参考图'
+    if (formData.value.images.length < 1) {
+      validationError.value = '请至少上传 1 张参考图'
       return
     }
     if (formData.value.images.length > 4) {
@@ -248,7 +276,7 @@ const handleSubmit = () => {
   }
 
   const payload = {
-    model: 'doubao-seedream-4-0-250828',
+    model: formData.value.model,
     prompt: finalPrompt,
     size: formData.value.size,
     watermark: false,

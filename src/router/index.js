@@ -11,40 +11,40 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/volcengine-seedream4-image'
+      redirect: '/app/volcengine-seedream4-image'
     },
     {
-      path: '/volcengine-seedream4-image',
+      path: '/app/volcengine-seedream4-image',
       name: 'volcengine-seedream4-image',
       component: ImageGeneration,
-      meta: { title: '火山Seedream4.0生图' }
+      meta: { title: '火山Seedream4生图' }
     },
     {
-      path: '/yi-bananapro-image',
+      path: '/app/yi-bananapro-image',
       name: 'yi-bananapro-image',
       component: BananaProImageGeneration,
       meta: { title: 'API易BananaPro生图' }
     },
     {
-      path: '/plato-bananapro-image',
+      path: '/app/plato-bananapro-image',
       name: 'plato-bananapro-image',
       component: PlatoImageGeneration,
       meta: { title: '柏拉图BananaPro生图' }
     },
     {
-      path: '/yi-sora2-video',
+      path: '/app/yi-sora2-video',
       name: 'yi-sora2-video',
       component: VideoGeneration,
       meta: { title: 'API易Sora2生视频' }
     },
     {
-      path: '/plato-sora2-video',
+      path: '/app/plato-sora2-video',
       name: 'plato-sora2-video',
       component: PlatoSora2VideoGeneration,
       meta: { title: '柏拉图Sora2生视频' }
     },
     {
-      path: '/tongyi-wanxiang-video',
+      path: '/app/tongyi-wanxiang-video',
       name: 'tongyi-wanxiang-video',
       component: TongyiWanxiangVideoGeneration,
       meta: { title: '通义万相2.5生视频' }

@@ -6,37 +6,37 @@ const route = useRoute()
 
 const menuItems = [
   {
-    path: '/volcengine-seedream4-image',
+    path: '/app/volcengine-seedream4-image',
     name: 'volcengine-seedream4-image',
-    label: '火山Seedream4.0生图',
+    label: '火山Seedream4生图',
     icon: 'Picture'
   },
   {
-    path: '/yi-bananapro-image',
+    path: '/app/yi-bananapro-image',
     name: 'yi-bananapro-image',
     label: 'API易BananaPro生图',
     icon: 'Picture'
   },
   {
-    path: '/plato-bananapro-image',
+    path: '/app/plato-bananapro-image',
     name: 'plato-bananapro-image',
     label: '柏拉图BananaPro生图',
     icon: 'Picture'
   },
   {
-    path: '/yi-sora2-video',
+    path: '/app/yi-sora2-video',
     name: 'yi-sora2-video',
     label: 'API易Sora2生视频',
     icon: 'VideoCamera'
   },
   {
-    path: '/plato-sora2-video',
+    path: '/app/plato-sora2-video',
     name: 'plato-sora2-video',
     label: '柏拉图Sora2生视频',
     icon: 'VideoCamera'
   },
   {
-    path: '/tongyi-wanxiang-video',
+    path: '/app/tongyi-wanxiang-video',
     name: 'tongyi-wanxiang-video',
     label: '通义万相2.5生视频',
     icon: 'VideoCamera'

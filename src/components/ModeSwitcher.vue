@@ -26,7 +26,8 @@ const modes = [
   { value: 'text-to-image', label: '文生图' },
   { value: 'text-to-images', label: '文生组图' },
   { value: 'image-to-image', label: '图生图' },
-  { value: 'images-to-images', label: '图生组图' }
+  { value: 'images-to-images', label: '图生组图' },
+  { value: 'multi-image-fusion', label: '多图融合' }
 ]
 </script>
 
