@@ -1,12 +1,10 @@
 <template>
   <span class="tag" :class="tagType">
-    <Icon :icon="iconName" class="tag-icon" />
     <span class="tag-label">{{ displayLabel }}</span>
   </span>
 </template>
 
 <script setup>
-import { Icon } from '@iconify/vue'
 import { computed } from 'vue'
 
 const props = defineProps({
@@ -57,15 +55,6 @@ const typeConfig = {
   }
 }
 
-// 获取图标名称
-const iconName = computed(() => {
-  if (props.type === 'platform') {
-    return platformConfig[props.value]?.icon || 'carbon:application'
-  } else {
-    return typeConfig[props.value]?.icon || 'carbon:application'
-  }
-})
-
 // 获取显示标签
 const displayLabel = computed(() => {
   if (props.label) {
@@ -86,19 +75,15 @@ const tagType = computed(() => `tag-${props.type}`)
 .tag {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
+  justify-content: center;
+  padding: 1px 6px;
   border-radius: 6px;
   font-size: var(--font-size-xs);
   font-weight: 500;
   white-space: nowrap;
   transition: all var(--motion-base) var(--easing);
-}
-
-.tag-icon {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
+  background-color: #fff;
+  border: 1px solid #E5E7EB;
 }
 
 .tag-label {
@@ -107,21 +92,17 @@ const tagType = computed(() => `tag-${props.type}`)
 
 /* 平台标签样式 */
 .tag-platform {
-  background: linear-gradient(135deg, rgba(16, 163, 127, 0.15), rgba(25, 195, 125, 0.15));
-  color: var(--c-primary-300, #19C37D);
-  border: 1px solid rgba(16, 163, 127, 0.2);
+  background: #F3F6FB;
+  color: #44546B;
+  border-color: #D5DEEB;
 }
 
 /* 类型标签样式 */
 .tag-type {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(96, 165, 250, 0.15));
-  color: #60A5FA;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: #F3F6FB;
+  color: #44546B;
+  border-color: #D5DEEB;
+  font-weight: 500;
 }
 
-/* Hover 效果 */
-.tag:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 </style>

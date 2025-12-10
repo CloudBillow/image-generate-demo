@@ -79,7 +79,7 @@ function getPlatformIcon(platform) {
   const iconMap = {
     volcengine: 'carbon:cloud-services',
     yi: 'carbon:api',
-    plato: 'carbon:platform',
+    plato: 'mdi:chip',
     tongyi: 'carbon:ai-governance-tracked'
   }
   return iconMap[platform] || 'carbon:application'

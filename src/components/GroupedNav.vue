@@ -130,15 +130,15 @@ defineEmits(['toggle-group'])
 }
 
 .group-content {
-  padding-left: var(--space-md, 12px);
+  padding-left: 6px;
   overflow: hidden;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: var(--space-sm, 8px);
-  padding: var(--space-sm, 8px) var(--space-lg, 16px);
+  gap: 6px;
+  padding: var(--space-sm, 8px) 10px;
   margin-bottom: 4px;
   border-radius: var(--radius-button, 10px);
   text-decoration: none;
@@ -151,7 +151,7 @@ defineEmits(['toggle-group'])
 .nav-item:hover {
   background-color: var(--c-input, #40414F);
   color: var(--c-text, #ECECEC);
-  padding-left: calc(var(--space-lg, 16px) + 4px);
+  padding-left: 12px;
 }
 
 .nav-item.active {
