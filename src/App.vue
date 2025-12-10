@@ -40,6 +40,12 @@ const menuItems = [
     name: 'tongyi-wanxiang-video',
     label: '通义万相2.5生视频',
     icon: 'VideoCamera'
+  },
+  {
+    path: '/app/volcengine-seedance-pro-video',
+    name: 'volcengine-seedance-pro-video',
+    label: '火山Seedance1.0Pro生视频',
+    icon: 'VideoCamera'
   }
 ]
 

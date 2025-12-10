@@ -5,6 +5,7 @@ import BananaProImageGeneration from '../views/BananaProImageGeneration.vue'
 import PlatoImageGeneration from '../views/PlatoImageGeneration.vue'
 import PlatoSora2VideoGeneration from '../views/PlatoSora2VideoGeneration.vue'
 import TongyiWanxiangVideoGeneration from '../views/TongyiWanxiangVideoGeneration.vue'
+import SeedanceProVideoGeneration from '../views/SeedanceProVideoGeneration.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +49,12 @@ const router = createRouter({
       name: 'tongyi-wanxiang-video',
       component: TongyiWanxiangVideoGeneration,
       meta: { title: '通义万相2.5生视频' }
+    },
+    {
+      path: '/app/volcengine-seedance-pro-video',
+      name: 'volcengine-seedance-pro-video',
+      component: SeedanceProVideoGeneration,
+      meta: { title: '火山Seedance1.0Pro生视频' }
     }
   ]
 })
