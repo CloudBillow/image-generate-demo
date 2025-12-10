@@ -1,55 +1,28 @@
 <script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
+import { computed, watch } from 'vue'
+import GroupModeSwitcher from './components/GroupModeSwitcher.vue'
+import GroupedNav from './components/GroupedNav.vue'
+import { useMenuGrouping } from './composables/useMenuGrouping'
 
 const route = useRoute()
 
-const menuItems = [
-  {
-    path: '/app/volcengine-seedream4-image',
-    name: 'volcengine-seedream4-image',
-    label: '火山Seedream4生图',
-    icon: 'Picture'
-  },
-  {
-    path: '/app/yi-bananapro-image',
-    name: 'yi-bananapro-image',
-    label: 'API易BananaPro生图',
-    icon: 'Picture'
-  },
-  {
-    path: '/app/plato-bananapro-image',
-    name: 'plato-bananapro-image',
-    label: '柏拉图BananaPro生图',
-    icon: 'Picture'
-  },
-  {
-    path: '/app/yi-sora2-video',
-    name: 'yi-sora2-video',
-    label: 'API易Sora2生视频',
-    icon: 'VideoCamera'
-  },
-  {
-    path: '/app/plato-sora2-video',
-    name: 'plato-sora2-video',
-    label: '柏拉图Sora2生视频',
-    icon: 'VideoCamera'
-  },
-  {
-    path: '/app/tongyi-wanxiang-video',
-    name: 'tongyi-wanxiang-video',
-    label: '通义万相2.5生视频',
-    icon: 'VideoCamera'
-  },
-  {
-    path: '/app/volcengine-seedance-pro-video',
-    name: 'volcengine-seedance-pro-video',
-    label: '火山Seedance1.0Pro生视频',
-    icon: 'VideoCamera'
-  }
-]
+// 使用菜单分组 composable
+const {
+  groupMode,
+  currentMenu,
+  setGroupMode,
+  toggleGroup,
+  isGroupExpanded,
+  expandGroupByRoute
+} = useMenuGrouping()
 
 const currentRoute = computed(() => route.name)
+
+// 监听路由变化，自动展开对应分组
+watch(currentRoute, (newRoute) => {
+  expandGroupByRoute(newRoute)
+}, { immediate: true })
 </script>
 
 <template>
@@ -58,20 +31,20 @@ const currentRoute = computed(() => route.name)
       <div class="sidebar-header">
         <h1 class="app-title">生成工具平台</h1>
       </div>
-      <nav class="sidebar-nav">
-        <RouterLink
-          v-for="item in menuItems"
-          :key="item.path"
-          :to="item.path"
-          class="nav-item"
-          :class="{ active: currentRoute === item.name }"
-        >
-          <el-icon class="nav-icon">
-            <component :is="item.icon" />
-          </el-icon>
-          <span class="nav-label">{{ item.label }}</span>
-        </RouterLink>
-      </nav>
+
+      <!-- 分组模式切换器 -->
+      <GroupModeSwitcher
+        v-model="groupMode"
+        @update:model-value="setGroupMode"
+      />
+
+      <!-- 分组导航 -->
+      <GroupedNav
+        :menu="currentMenu"
+        :current-route="currentRoute"
+        :is-expanded="isGroupExpanded"
+        @toggle-group="toggleGroup"
+      />
     </aside>
     <main class="app-main">
       <RouterView />
@@ -119,47 +92,6 @@ const currentRoute = computed(() => route.name)
   letter-spacing: 0.5px;
 }
 
-.sidebar-nav {
-  flex: 1;
-  padding: var(--space-lg) var(--space-md);
-  overflow-y: auto;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: var(--space-md) var(--space-lg);
-  margin-bottom: 6px;
-  border-radius: var(--radius-button);
-  text-decoration: none;
-  color: var(--c-text-2);
-  transition: all var(--motion-base) var(--easing);
-  cursor: pointer;
-}
-
-.nav-item:hover {
-  background-color: var(--c-input);
-  color: var(--c-text);
-}
-
-.nav-item.active {
-  background: var(--g-primary);
-  color: #ffffff;
-  font-weight: 500;
-}
-
-.nav-icon {
-  font-size: 20px;
-  margin-right: var(--space-md);
-  flex-shrink: 0;
-}
-
-.nav-label {
-  font-size: var(--font-size-sm);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 .app-main {
   flex: 1;
