@@ -12,8 +12,6 @@ npm install
 npm run dev
 ```
 
-Vite 会自动将 `/api/*` 请求代理到 `https://ark.cn-beijing.volces.com/api/v3/*`
-
 ## 服务器部署
 
 ### 1. 构建项目
@@ -24,35 +22,11 @@ npm run build
 
 构建后的文件会生成在 `dist` 目录。
 
-### 2. 配置 Nginx
-
-参考 `nginx.conf.example` 文件，配置您的 Nginx：
-
-**关键配置点：**
-
-- **静态文件托管**: 指向 `dist` 目录
-- **SPA 路由支持**: `try_files $uri $uri/ /index.html`
-- **API 反向代理**: `/api/*` 代理到火山引擎 API
-- **SSE 流式支持**:
-  - `proxy_buffering off`
-  - `proxy_cache off`
-  - `proxy_read_timeout 300s`
-
-### 3. 部署步骤
+### 2. 部署步骤
 
 ```bash
-# 1. 上传 dist 目录到服务器
-scp -r dist/* user@your-server:/path/to/nginx/html/
-
-# 2. 配置 Nginx
-sudo cp nginx.conf.example /etc/nginx/sites-available/your-app
-sudo ln -s /etc/nginx/sites-available/your-app /etc/nginx/sites-enabled/
-
-# 3. 测试配置
-sudo nginx -t
-
-# 4. 重启 Nginx
-sudo systemctl restart nginx
+# 执行部署脚本
+[deploy.sh](deploy.sh)
 ```
 
 ## 架构说明
