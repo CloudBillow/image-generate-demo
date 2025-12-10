@@ -43,10 +43,6 @@
             />
             <!-- 模型名称 -->
             <span class="nav-label">{{ item.modelLabel }}</span>
-            <!-- Element Plus 图标 -->
-            <el-icon class="nav-icon">
-              <component :is="item.icon" />
-            </el-icon>
           </RouterLink>
         </div>
       </Transition>
@@ -173,16 +169,6 @@ defineEmits(['toggle-group'])
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.nav-icon {
-  font-size: 18px;
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-
-.nav-item.active .nav-icon {
-  opacity: 1;
 }
 
 /* 折叠展开动画 */
