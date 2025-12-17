@@ -71,6 +71,16 @@ const rawMenuData = [
     type: 'video',
     typeLabel: '视频生成',
     icon: 'VideoCamera'
+  },
+  {
+    path: '/app/image-editor',
+    name: 'image-editor',
+    platform: 'toolkit',
+    platformLabel: '工具箱',
+    model: '图片编辑',
+    type: 'editor',
+    typeLabel: '图片编辑',
+    icon: 'Edit'
   }
 ]
 
@@ -80,7 +90,8 @@ function getPlatformIcon(platform) {
     volcengine: 'carbon:cloud-services',
     yi: 'carbon:api',
     plato: 'mdi:chip',
-    tongyi: 'carbon:ai-governance-tracked'
+    tongyi: 'carbon:ai-governance-tracked',
+    toolkit: 'carbon:tool-kit'
   }
   return iconMap[platform] || 'carbon:application'
 }
@@ -89,7 +100,8 @@ function getPlatformIcon(platform) {
 function getTypeIcon(type) {
   const iconMap = {
     image: 'carbon:image',
-    video: 'carbon:video'
+    video: 'carbon:video',
+    editor: 'carbon:crop'
   }
   return iconMap[type] || 'carbon:application'
 }
